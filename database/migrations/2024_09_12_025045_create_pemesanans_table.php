@@ -18,7 +18,7 @@ return new class extends Migration
                 $table->integer('QTY');
                 $table->date('tgl_pemesanan');
                 $table->date('tgn_deathline');
-                $table->string('status');
+                $table->enum('status', ['on progress', 'done', 'selesai'])->default('on progress');
                 $table->timestamps();
             });
 

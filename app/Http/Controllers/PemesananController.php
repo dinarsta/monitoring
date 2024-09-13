@@ -13,12 +13,6 @@ class PemesananController extends Controller
         return view('index', compact('pemesanans'));
     }
 
-    public function show($id)
-    {
-        $pemesanan = Pemesanan::findOrFail($id);
-        return view('show', compact('pemesanan'));
-    }
-
     public function create()
     {
         return view('create');
@@ -35,43 +29,57 @@ class PemesananController extends Controller
         ]);
 
         $pemesanan = new Pemesanan($request->all());
-        $pemesanan->status = 'selesai';  // Automatically set the status to "selesai"
+        // Do not set status here
         $pemesanan->save();
 
-        return redirect()->route('index')->with('success', 'Order created successfully and status set to selesai.');
+        return redirect()->route('index')->with('success', 'Order created successfully.');
     }
+
 
 
     public function edit($id)
     {
         $pemesanan = Pemesanan::findOrFail($id);
+        dd($pemesanan); // Debugging line
         return view('edit', compact('pemesanan'));
     }
 
-    public function update(Request $request, $id)
-{
-    $request->validate([
-        'atas_nama' => 'required|string|max:255',
-        'nama_design' => 'required|string|max:255',
-        'QTY' => 'required|integer',
-        'tgl_pemesanan' => 'required|date',
-        'tgn_deathline' => 'required|date',
-    ]);
 
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'atas_nama' => 'required|string|max:255',
+            'nama_design' => 'required|string|max:255',
+            'QTY' => 'required|integer',
+            'tgl_pemesanan' => 'required|date',
+            'tgn_deathline' => 'required|date',
+        ]);
+
+        $pemesanan = Pemesanan::findOrFail($id);
+        $pemesanan->update($request->all());
+        // Do not set status here
+        $pemesanan->save();
+
+        return redirect()->route('index')->with('success', 'Order updated successfully.');
+    }
+
+
+
+public function destroy($id)
+{
     $pemesanan = Pemesanan::findOrFail($id);
-    $pemesanan->update($request->all());
-    $pemesanan->status = 'selesai';  // Automatically set the status to "selesai"
+    $pemesanan->delete();
+
+    return redirect()->route('index')->with('success', 'Order deleted successfully.');
+}
+public function markAsCompleted($id)
+{
+    $pemesanan = Pemesanan::findOrFail($id);
+    $pemesanan->status = 'selesai';
     $pemesanan->save();
 
-    return redirect()->route('index')->with('success', 'Order updated successfully and status set to selesai.');
+    return redirect()->route('index')->with('success', 'Order status updated to selesai.');
 }
 
-
-    public function destroy($id)
-    {
-        $pemesanan = Pemesanan::findOrFail($id);
-        $pemesanan->delete();
-
-        return redirect()->route('index')->with('success', 'Order deleted successfully.');
-    }
 }

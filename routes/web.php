@@ -19,17 +19,10 @@ Route::get('/', function () {
 });
 
 
-// Display all orders
-Route::get('/index', [PemesananController::class, 'index'])->name('index');
+Route::get('/', [PemesananController::class, 'index'])->name('index');
+Route::get('/create', [PemesananController::class, 'create'])->name('create');
+Route::post('/store', [PemesananController::class, 'store'])->name('store');
 
-// Show the form for creating a new order
-Route::get('create', [PemesananController::class, 'create'])->name('create');
-
-// Handle form submission for creating a new order
-Route::post('create', [PemesananController::class, 'store']);
-
-// Show the details of a specific order
-Route::get('/pemesanans/{id}', [PemesananController::class, 'show'])->name('show');
 
 // Show the form for editing an order
 Route::get('/pemesanans/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
@@ -37,5 +30,11 @@ Route::get('/pemesanans/{id}/edit', [PemesananController::class, 'edit'])->name(
 // Handle form submission for updating an order
 Route::post('/pemesanans/{id}/edit', [PemesananController::class, 'update']);
 
-// Handle deletion of an order
-Route::post('/pemesanans/{id}/delete', [PemesananController::class, 'destroy'])->name('destroy');
+Route::get('/pemesanan/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
+
+Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
+
+
+Route::delete('/pemesanan/{id}', [PemesananController::class, 'destroy'])->name('delete');
+
+

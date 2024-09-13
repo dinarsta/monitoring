@@ -3,7 +3,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1></h1>
+        <h1>Create Order</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -14,72 +14,49 @@
 
     <section class="section dashboard">
         <div class="row">
-
             <!-- Left side columns -->
-            <div class="col-lg-8">
-              <div>
-                <form>
-                    <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Your Name</label>
-                      <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputText">
-                      </div>
-                    </div>
-                    <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                      <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail">
-                      </div>
-                    </div>
-                    <div class="row mb-3">
-                      <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-                      <div class="col-sm-10">
-                        <input type="password" class="form-control" id="inputPassword">
-                      </div>
-                    </div>
-                    <fieldset class="row mb-3">
-                      <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                      <div class="col-sm-10">
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                          <label class="form-check-label" for="gridRadios1">
-                            First radio
-                          </label>
+            <div class="col-lg-8 mx-auto">
+              <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Form</h5>
+
+                    <!-- Form -->
+                    <form action="{{ route('store') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="atas_nama" class="form-label">Atas Nama:</label>
+                            <input type="text" class="form-control" name="atas_nama" id="atas_nama" required>
                         </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                          <label class="form-check-label" for="gridRadios2">
-                            Second radio
-                          </label>
+
+                        <div class="mb-3">
+                            <label for="nama_design" class="form-label">Nama Design:</label>
+                            <input type="text" class="form-control" name="nama_design" id="nama_design" required>
                         </div>
-                        <div class="form-check disabled">
-                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-                          <label class="form-check-label" for="gridRadios3">
-                            Third disabled radio
-                          </label>
+
+                        <div class="mb-3">
+                            <label for="QTY" class="form-label">QTY:</label>
+                            <input type="number" class="form-control" name="QTY" id="QTY" required>
                         </div>
-                      </div>
-                    </fieldset>
-                    <div class="row mb-3">
-                      <div class="col-sm-10 offset-sm-2">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="gridCheck1">
-                          <label class="form-check-label" for="gridCheck1">
-                            Example checkbox
-                          </label>
+
+                        <div class="mb-3">
+                            <label for="tgl_pemesanan" class="form-label">Tanggal Pemesanan:</label>
+                            <input type="date" class="form-control" name="tgl_pemesanan" id="tgl_pemesanan" required>
                         </div>
-                      </div>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                      <button type="reset" class="btn btn-secondary">Reset</button>
-                    </div>
-                  </form>
+
+                        <div class="mb-3">
+                            <label for="tgn_deathline" class="form-label">Tanggal Deathline:</label>
+                            <input type="date" class="form-control" name="tgn_deathline" id="tgn_deathline" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Create Order</button>
+                    </form>
+                    <!-- End Form -->
+
+                </div>
               </div>
             </div>
         </div>
     </section>
 
-
-</main><!-- End #main -->
+</main>
 @endsection
