@@ -47,9 +47,11 @@
                                                     @if ($pemesanan->status === 'selesai')
                                                         <span class="badge bg-success">Completed</span>
                                                     @else
-                                                        <form action="{{ route('mark-as-completed', $pemesanan->id) }}" method="POST" style="display:inline;">
+                                                        <form action="{{ route('mark-as-completed', $pemesanan->id) }}"
+                                                            method="POST" style="display:inline;">
                                                             @csrf
-                                                            <button type="submit" class="badge bg-primary border-0" style="cursor: pointer;">Mark as Completed</button>
+                                                            <button type="submit" class="badge bg-primary border-0"
+                                                                style="cursor: pointer;">Mark as Completed</button>
                                                         </form>
                                                     @endif
                                                 </td>

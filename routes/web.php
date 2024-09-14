@@ -14,27 +14,34 @@ use App\Http\Controllers\PemesananController;
 |
 */
 
+// Redirect the homepage to the login page if not authenticated
 Route::get('/', function () {
-    return view('home');
+    return redirect()->route('login');
 });
 
+// Show login form
+Route::get('/login', [PemesananController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [PemesananController::class, 'login']);
 
-Route::get('/', [PemesananController::class, 'index'])->name('index');
-Route::get('/create', [PemesananController::class, 'create'])->name('create');
-Route::post('/store', [PemesananController::class, 'store'])->name('store');
+// Registration routes (optional)
+Route::get('/register', [PemesananController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [PemesananController::class, 'register']);
 
+// Protecting routes - Only accessible to authenticated users
+Route::middleware('auth')->group(function () {
+    // Dashboard route
+    Route::get('/dashboard', [PemesananController::class, 'index'])->name('index');
 
-// Show the form for editing an order
-Route::get('/pemesanans/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
+    // Routes for managing orders
+    Route::get('/create', [PemesananController::class, 'create'])->name('create');
+    Route::post('/store', [PemesananController::class, 'store'])->name('store');
 
-// Handle form submission for updating an order
-Route::post('/pemesanans/{id}/edit', [PemesananController::class, 'update']);
+    Route::get('/pemesanans/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
+    Route::post('/pemesanans/{id}/edit', [PemesananController::class, 'update']);
 
-Route::get('/pemesanan/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
+    Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
+    Route::delete('/pemesanan/{id}', [PemesananController::class, 'destroy'])->name('delete');
 
-Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
-
-
-Route::delete('/pemesanan/{id}', [PemesananController::class, 'destroy'])->name('delete');
-
-
+    // Logout route
+    Route::post('/logout', [PemesananController::class, 'logout'])->name('logout');
+});
