@@ -124,7 +124,7 @@ public function login(Request $request)
     ]);
 
     if (Auth::attempt($request->only('email', 'password'))) {
-        return redirect()->route('dashboard');
+        return redirect()->route('index');
     }
 
     throw ValidationException::withMessages([
