@@ -20,6 +20,14 @@
                         <div class="card-body">
                             <h5 class="card-title">Daftar Pesanan</h5>
 
+                            <!-- Search Form -->
+                            <form action="{{ route('index') }}" method="GET" class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari pesanan...">
+                                    <button type="submit" class="btn btn-primary"> <i class="bi bi-search"></i></button>
+                                </div>
+                            </form>
+
                             <!-- Responsive Table -->
                             <div class="table-responsive">
                                 <table id="orderTable" class="table table-striped table-hover table-bordered">
@@ -36,9 +44,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pemesanans as $pemesanan)
+                                        @forelse ($pemesanans as $pemesanan)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $loop->iteration + $pemesanans->firstItem() - 1 }}</td>
                                                 <td>{{ $pemesanan->atas_nama }}</td>
                                                 <td>{{ $pemesanan->nama_design }}</td>
                                                 <td>{{ $pemesanan->QTY }}</td>
@@ -76,11 +84,20 @@
                                                     </form>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center">Tidak ada data ditemukan</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
                             <!-- End Responsive Table -->
+
+                            {{-- <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-3">
+                                {{ $pemesanans->appends(request()->query())->links() }}
+                            </div> --}}
 
                         </div>
                     </div>
@@ -91,6 +108,15 @@
     </main>
 
     <script>
+        $(document).ready(function() {
+            $('#orderTable').DataTable({
+                "order": [], // Disable initial sorting
+                "paging": true, // Enable DataTables pagination
+                "pageLength": 10, // Number of rows per page
+                "searching": false // Disable DataTables search to use Laravel search
+            });
+        });
+
         // Move row up
         function moveUp(btn) {
             var row = btn.closest('tr');
@@ -106,14 +132,6 @@
                 row.parentNode.insertBefore(row.nextElementSibling, row);
             }
         }
-
-        $(document).ready(function() {
-            $('#orderTable').DataTable({
-                "order": [], // Disable initial sorting
-                "paging": true,
-                "searching": true
-            });
-        });
 
         function confirmDelete(id, namaDesign, atasNama) {
             return confirm('Apakah Anda yakin ingin menghapus pesanan atas nama: ' + atasNama + '?');

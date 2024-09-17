@@ -11,11 +11,24 @@ use Illuminate\Validation\ValidationException;
 
 class PemesananController extends Controller
 {
-    public function index()
-{
-    $pemesanans = Pemesanan::all(); // Fetch all orders
-    return view('index', compact('pemesanans')); // Return view with orders
-}
+    public function index(Request $request)
+    {
+        // Fetching orders with pagination and search functionality
+        $query = Pemesanan::query();
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where('atas_nama', 'like', "%{$searchTerm}%")
+                  ->orWhere('nama_design', 'like', "%{$searchTerm}%");
+        }
+
+        // Paginate results
+        $pemesanans = $query->paginate(5);
+
+        // Return the view with paginated data
+        return view('index', compact('pemesanans'));
+    }
 
 
     public function create()
