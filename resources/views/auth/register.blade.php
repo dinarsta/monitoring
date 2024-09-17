@@ -59,7 +59,7 @@
                                         @csrf
                                         <div class="col-12">
                                             <label for="yourName" class="form-label">Your Name</label>
-                                            <input type="text" name="name" class="form-control" id="yourName" value="{{ old('name') }}" required>
+                                            <input type="text" name="name" class="form-control" id="yourName" value="{{ old('name') }}" required autocomplete="off">
                                             <div class="invalid-feedback">Please, enter your name!</div>
                                             @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -68,7 +68,7 @@
 
                                         <div class="col-12">
                                             <label for="yourEmail" class="form-label">Your Email</label>
-                                            <input type="email" name="email" class="form-control" id="yourEmail" value="{{ old('email') }}" required>
+                                            <input type="email" name="email" class="form-control" id="yourEmail" value="{{ old('email') }}" required autocomplete="off">
                                             <div class="invalid-feedback">Please enter a valid Email address!</div>
                                             @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -77,7 +77,7 @@
 
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                            <input type="password" name="password" class="form-control" id="yourPassword" required autocomplete="off">
                                             <div class="invalid-feedback">Please enter your password!</div>
                                             @error('password')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -86,7 +86,7 @@
 
                                         <div class="col-12">
                                             <label for="yourPasswordConfirmation" class="form-label">Confirm Password</label>
-                                            <input type="password" name="password_confirmation" class="form-control" id="yourPasswordConfirmation" required>
+                                            <input type="password" name="password_confirmation" class="form-control" id="yourPasswordConfirmation" required autocomplete="off">
                                             <div class="invalid-feedback">Please confirm your password!</div>
                                         </div>
 

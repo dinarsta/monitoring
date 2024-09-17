@@ -29,8 +29,11 @@ Route::post('/register', [PemesananController::class, 'register']);
 
 // Protecting routes - Only accessible to authenticated users
 Route::middleware('auth')->group(function () {
+
+
+
     // Dashboard route
-    Route::get('/dashboard', [PemesananController::class, 'index'])->name('index');
+    Route::get('/home', [PemesananController::class, 'index'])->name('index');
 
     // Routes for managing orders
     Route::get('/create', [PemesananController::class, 'create'])->name('create');

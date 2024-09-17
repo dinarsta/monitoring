@@ -55,19 +55,33 @@
                                         <p class="text-center small">Enter your email & password to login</p>
                                     </div>
 
+                                    <!-- Error Handling for invalid login -->
+                                    <div class="col-12">
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Form -->
                                     <form class="row g-3 needs-validation" method="POST" action="{{ route('login') }}">
                                         @csrf
                                         <div class="col-12">
                                             <label for="yourEmail" class="form-label">Email</label>
                                             <div class="input-group has-validation">
-                                                <input type="email" name="email" class="form-control" id="yourEmail" required>
+                                                <input type="email" name="email" class="form-control" id="yourEmail" required autocomplete="off">
                                                 <div class="invalid-feedback">Please enter your email.</div>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                            <input type="password" name="password" class="form-control" id="yourPassword" required autocomplete="off">
                                             <div class="invalid-feedback">Please enter your password!</div>
                                         </div>
 
