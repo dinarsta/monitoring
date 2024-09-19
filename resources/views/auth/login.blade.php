@@ -48,6 +48,14 @@
                                     <span class="d-none d-lg-block">Samara Inti Abadi</span>
                                 </a>
                             </div>
+                            <div>
+                                @if(session('alert'))
+    <div class="alert alert-warning">
+        {{ session('alert') }}
+    </div>
+@endif
+
+                            </div>
                             <div class="card mb-3">
                                 <div class="card-body">
                                     <div class="pt-4 pb-2">

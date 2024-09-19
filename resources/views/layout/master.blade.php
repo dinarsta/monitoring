@@ -18,7 +18,7 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
         rel="stylesheet">
-{{--  --}}
+    {{--  --}}
 
     <!-- Tambahkan CSS DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
@@ -69,7 +69,8 @@
                 </li><!-- End Search Icon-->
                 <li class="nav-item dropdown pe-3">
 
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
+                        data-bs-toggle="dropdown">
                         <img src="assets/img/profile-img.jpeg" alt="Profile" class="rounded-circle">
                         <span class="d-none d-md-block dropdown-toggle ps-2">
                             {{ Auth::user()->name }} ({{ Auth::user()->role }})
@@ -83,7 +84,8 @@
                                 @csrf
                             </form>
 
-                            <a class="dropdown-item" href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a class="dropdown-item" href="/logout"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Logout
                             </a>
 
@@ -103,26 +105,26 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link " href="/home">
+                <a class="nav-link collapsed" href="{{ url('home') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li><!-- End Dashboard Nav -->
 
-
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/create">
+                <a class="nav-link collapsed" href="{{ url('create') }}">
                     <i class="bi bi-plus"></i>
                     <span>Add New</span>
                 </a>
             </li><!-- End Contact Page Nav -->
 
+
         </ul>
 
     </aside><!-- End Sidebar-->
-{{--  --}}
-@yield('content')
-{{--  --}}
+    {{--  --}}
+    @yield('content')
+    {{--  --}}
     <!-- ======= Footer ======= -->
 
 
@@ -142,7 +144,7 @@
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 
 </body>
