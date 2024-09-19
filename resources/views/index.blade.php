@@ -51,7 +51,7 @@
                                             <td>{{ $pemesanan->nama_design }}</td>
                                             <td>{{ $pemesanan->QTY }}</td>
                                             <td>{{ $pemesanan->tgl_pemesanan }}</td>
-                                            <td>{{ $pemesanan->tgn_deathline }}</td>
+                                            <td>{{ $pemesanan->tgn_deadline }}</td>
                                             <td>
                                                 @if ($pemesanan->status === 'selesai')
                                                     <span class="badge bg-success">Completed</span>
