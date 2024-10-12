@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pemesanans', function (Blueprint $table) {
-                $table->id();
-                $table->string('atas_nama');
-                $table->string('nama_design');
-                $table->integer('QTY');
-                $table->date('tgl_pemesanan');
-                $table->date('tgn_deathline');
-                $table->enum('status', ['on progress', 'done', 'selesai'])->default('on progress');
-                $table->timestamps();
+            $table->id();
+            $table->string('atas_nama');
+            $table->string('nama_design');
+            $table->integer('QTY');
+            $table->string('jenis_barang')->nullable(); // Allow jenis_barang to be null
+            $table->date('tgl_pemesanan');
+            $table->date('tgn_deathline');
+            $table->enum('status', ['on progress', 'done', 'selesai'])->default('on progress');
+            $table->timestamps();
             });
 
     }

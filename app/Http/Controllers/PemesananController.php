@@ -42,16 +42,28 @@ class PemesananController extends Controller
             'atas_nama' => 'required|string|max:255',
             'nama_design' => 'required|string|max:255',
             'QTY' => 'required|integer',
+            'jenis_barang' => 'required|string',
             'tgl_pemesanan' => 'required|date',
             'tgn_deathline' => 'required|date',
+            'jenis_barang_lain' => '|string|max:255',
         ]);
 
-        $pemesanan = new Pemesanan($request->all());
-        // Do not set status here
-        $pemesanan->save();
+        $pemesan = new Pemesanan();
+        $pemesan->atas_nama = $request->atas_nama;
+        $pemesan->nama_design = $request->nama_design;
+        $pemesan->QTY = $request->QTY;
+        $pemesan->tgl_pemesanan = $request->tgl_pemesanan;
+        $pemesan->tgn_deathline = $request->tgn_deathline;
 
-        return redirect()->route('index')->with('success', 'Order created successfully.');
+        // Save the `jenis_barang` or the custom `jenis_barang_lain`
+        $pemesan->jenis_barang = $request->jenis_barang === 'lainnya' ? $request->jenis_barang_lain : $request->jenis_barang;
+
+        $pemesan->save();
+
+        return redirect()->route('index')->with('success', 'Order created successfully!');
     }
+
+
 
 
 

@@ -39,6 +39,42 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="jenis_barang" class="form-label">Jenis Barang:</label>
+                            <select class="form-select" name="jenis_barang" id="jenis_barang" onchange="toggleJenisBarangLain()">
+                                <option value="gelang">Gelang</option>
+                                <option value="tali lanyard">Tali Lanyard</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+
+                        <!-- Input tambahan untuk jenis_barang_lain, hanya tampil jika 'lainnya' dipilih -->
+                        <div class="mb-3" id="jenis_barang_lain_container" style="display: none;">
+                            <label for="jenis_barang_lain" class="form-label">Jenis Barang Lainnya:</label>
+                            <input type="text" class="form-control" name="jenis_barang_lain" id="jenis_barang_lain" maxlength="255">
+                        </div>
+
+                        <script>
+                            function toggleJenisBarangLain() {
+                                const jenisBarangSelect = document.getElementById('jenis_barang');
+                                const jenisBarangLainContainer = document.getElementById('jenis_barang_lain_container');
+
+                                if (jenisBarangSelect.value === 'lainnya') {
+                                    jenisBarangLainContainer.style.display = 'block';
+                                } else {
+                                    jenisBarangLainContainer.style.display = 'none';
+                                    // Reset the value of jenis_barang_lain if it's hidden
+                                    document.getElementById('jenis_barang_lain').value = '';
+                                }
+                            }
+                        </script>
+
+
+                        <div class="mb-3" id="other_input_container" style="display: none;">
+                            <label for="jenis_barang_lain" class="form-label">Sebutkan Jenis Barang:</label>
+                            <input type="text" class="form-control" name="jenis_barang_lain" id="jenis_barang_lain">
+                        </div>
+
+                        <div class="mb-3">
                             <label for="tgl_pemesanan" class="form-label">Tanggal Pemesanan:</label>
                             <input type="date" class="form-control" name="tgl_pemesanan" id="tgl_pemesanan" required>
                         </div>
@@ -59,4 +95,7 @@
     </section>
 
 </main>
+
+
+
 @endsection
