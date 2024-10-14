@@ -13,7 +13,7 @@ class Pemesanan extends Model
         'nama_design',
         'QTY',
         'tgl_pemesanan',
-        'tgn_deathline',
+       'tgl_deadline',
         'status',
     ];
 }

@@ -1,7 +1,7 @@
 @extends('layout.master')
+
 @section('content')
 <main id="main" class="main">
-
     <div class="pagetitle">
         <h1>Create Order</h1>
         <nav>
@@ -10,11 +10,10 @@
                 <li class="breadcrumb-item active">Order Form</li>
             </ol>
         </nav>
-    </div><!-- End Page Title -->
+    </div>
 
     <section class="section dashboard">
         <div class="row">
-            <!-- Left side columns -->
             <div class="col-lg-8 mx-auto">
               <div class="card">
                 <div class="card-body">
@@ -47,7 +46,7 @@
                             </select>
                         </div>
 
-                        <!-- Input tambahan untuk jenis_barang_lain, hanya tampil jika 'lainnya' dipilih -->
+                        <!-- Conditional Input for Other Types of Goods -->
                         <div class="mb-3" id="jenis_barang_lain_container" style="display: none;">
                             <label for="jenis_barang_lain" class="form-label">Jenis Barang Lainnya:</label>
                             <input type="text" class="form-control" name="jenis_barang_lain" id="jenis_barang_lain" maxlength="255">
@@ -68,20 +67,14 @@
                             }
                         </script>
 
-
-                        <div class="mb-3" id="other_input_container" style="display: none;">
-                            <label for="jenis_barang_lain" class="form-label">Sebutkan Jenis Barang:</label>
-                            <input type="text" class="form-control" name="jenis_barang_lain" id="jenis_barang_lain">
-                        </div>
-
                         <div class="mb-3">
                             <label for="tgl_pemesanan" class="form-label">Tanggal Pemesanan:</label>
                             <input type="date" class="form-control" name="tgl_pemesanan" id="tgl_pemesanan" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="tgn_deathline" class="form-label">Tanggal Deathline:</label>
-                            <input type="date" class="form-control" name="tgn_deathline" id="tgn_deathline" required>
+                            <label for="tgl_deadline" class="form-label">Tanggal Deadline:</label>
+                            <input type="date" class="form-control" name="tgl_deadline" id="tgl_deadline" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Create Order</button>
@@ -93,9 +86,5 @@
             </div>
         </div>
     </section>
-
 </main>
-
-
-
 @endsection

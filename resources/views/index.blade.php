@@ -55,23 +55,27 @@
                                                 <td>{{ $pemesanan->jenis_barang }}</td> <!-- Tampilkan Jenis Barang -->
                                                 <td>{{ $pemesanan->QTY }}</td>
                                                 <td>{{ $pemesanan->tgl_pemesanan }}</td>
-                                                <td>{{ $pemesanan->tgn_deathline }}</td>
+                                                <td>{{ $pemesanan->tgl_deadline }}</td>
                                                 <td>
                                                     @if ($pemesanan->status === 'selesai')
                                                         <span class="badge bg-success">DONE</span>
                                                     @else
-                                                        <form action="{{ route('mark-as-completed', $pemesanan->id) }}" method="POST" class="d-inline">
+                                                        <form action="{{ route('mark-as-completed', $pemesanan->id) }}"
+                                                            method="POST" class="d-inline">
                                                             @csrf
-                                                            <button type="submit" class="badge bg-primary border-0">ON PROGRESS</button>
+                                                            <button type="submit" class="badge bg-primary border-0">ON
+                                                                PROGRESS</button>
                                                         </form>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <button type="button" class="btn btn-info btn-sm me-1" onclick="moveRow(this, -1)">
+                                                        <button type="button" class="btn btn-info btn-sm me-1"
+                                                            onclick="moveRow(this, -1)">
                                                             <i class="bi bi-arrow-up"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-warning btn-sm me-1" onclick="moveRow(this, 1)">
+                                                        <button type="button" class="btn btn-warning btn-sm me-1"
+                                                            onclick="moveRow(this, 1)">
                                                             <i class="bi bi-arrow-down"></i>
                                                         </button>
 
@@ -81,14 +85,18 @@
                                                             class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
+                                                            @if(Auth::user() && Auth::user()->role == 'admin')
                                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        @endif
+
                                                         </form>
                                                     </div>
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="9" class="text-center">Tidak ada data ditemukan</td> <!-- Updated colspan -->
+                                                <td colspan="9" class="text-center">Tidak ada data ditemukan</td>
+                                                <!-- Updated colspan -->
                                             </tr>
                                         @endforelse
                                     </tbody>

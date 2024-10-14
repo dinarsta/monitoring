@@ -44,24 +44,25 @@ class PemesananController extends Controller
             'QTY' => 'required|integer',
             'jenis_barang' => 'required|string',
             'tgl_pemesanan' => 'required|date',
-            'tgn_deathline' => 'required|date',
-            'jenis_barang_lain' => '|string|max:255',
+            'tgl_deadline' => 'required|date',
+            'jenis_barang_lain' => 'nullable|string|max:255', // Optional for 'lainnya'
         ]);
 
-        $pemesan = new Pemesanan();
-        $pemesan->atas_nama = $request->atas_nama;
-        $pemesan->nama_design = $request->nama_design;
-        $pemesan->QTY = $request->QTY;
-        $pemesan->tgl_pemesanan = $request->tgl_pemesanan;
-        $pemesan->tgn_deathline = $request->tgn_deathline;
+        $pemesanan = new Pemesanan();
+        $pemesanan->atas_nama = $request->atas_nama;
+        $pemesanan->nama_design = $request->nama_design;
+        $pemesanan->QTY = $request->QTY;
+        $pemesanan->tgl_pemesanan = $request->tgl_pemesanan;
+        $pemesanan->tgl_deadline= $request->tgl_deadline;
 
         // Save the `jenis_barang` or the custom `jenis_barang_lain`
-        $pemesan->jenis_barang = $request->jenis_barang === 'lainnya' ? $request->jenis_barang_lain : $request->jenis_barang;
+        $pemesanan->jenis_barang = $request->jenis_barang === 'lainnya' ? $request->jenis_barang_lain : $request->jenis_barang;
 
-        $pemesan->save();
+        $pemesanan->save();
 
         return redirect()->route('index')->with('success', 'Order created successfully!');
     }
+
 
 
 
@@ -83,7 +84,7 @@ class PemesananController extends Controller
             'nama_design' => 'required|string|max:255',
             'QTY' => 'required|integer',
             'tgl_pemesanan' => 'required|date',
-            'tgn_deathline' => 'required|date',
+            'tgn_deadline' => 'required|date',
         ]);
 
         $pemesanan = Pemesanan::findOrFail($id);

@@ -111,12 +111,15 @@
                 </a>
             </li><!-- End Dashboard Nav -->
 
+            @if(Auth::user() && Auth::user()->role == 'admin')
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('create') }}">
                     <i class="bi bi-plus"></i>
                     <span>Add New</span>
                 </a>
             </li><!-- End Contact Page Nav -->
+            @endif
+
 
 
         </ul>

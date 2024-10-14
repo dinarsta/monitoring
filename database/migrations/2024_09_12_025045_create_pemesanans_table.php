@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('QTY');
             $table->string('jenis_barang')->nullable(); // Allow jenis_barang to be null
             $table->date('tgl_pemesanan');
-            $table->date('tgn_deathline');
+            $table->date('tgl_deadline');
             $table->enum('status', ['on progress', 'done', 'selesai'])->default('on progress');
             $table->timestamps();
             });
