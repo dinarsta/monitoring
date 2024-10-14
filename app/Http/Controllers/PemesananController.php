@@ -121,12 +121,22 @@ public function showRegistrationForm()
 
 public function register(Request $request)
 {
+    // Check the number of existing users
+    $userCount = User::count();
+
+    // If there are already 2 users, deny registration
+    if ($userCount >= 2) {
+        return redirect()->back()->withErrors(['message' => 'Registration failed: Only two user accounts are allowed.']);
+    }
+
+    // Validate the request
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users',
         'password' => 'required|string|min:8|confirmed',
     ]);
 
+    // Create a new user
     User::create([
         'name' => $request->name,
         'email' => $request->email,
@@ -136,6 +146,7 @@ public function register(Request $request)
 
     return redirect()->route('login')->with('success', 'Registration successful. Please login.');
 }
+
 
 public function showLoginForm()
 {

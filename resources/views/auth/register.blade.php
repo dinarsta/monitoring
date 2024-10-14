@@ -54,6 +54,13 @@
                                         <p class="text-center small">Enter your personal details to create an account</p>
                                     </div>
 
+                                    <!-- Display error message if registration fails -->
+                                    @if($errors->has('message'))
+                                        <div class="alert alert-danger">
+                                            {{ $errors->first('message') }}
+                                        </div>
+                                    @endif
+
                                     <!-- Laravel registration form -->
                                     <form method="POST" action="{{ route('register') }}" class="row g-3 needs-validation" novalidate>
                                         @csrf
