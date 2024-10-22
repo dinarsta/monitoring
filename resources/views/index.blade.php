@@ -38,7 +38,7 @@
                                             <th>No</th>
                                             <th>Atas Nama</th>
                                             <th>Nama Design</th>
-                                            <th>Jenis Barang</th> <!-- Tambahkan kolom Jenis Barang -->
+                                            <th>Jenis Barang</th>
                                             <th>QTY</th>
                                             <th>Tanggal Pemesanan</th>
                                             <th>Tanggal Deadline</th>
@@ -52,10 +52,12 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $pemesanan->atas_nama }}</td>
                                                 <td>{{ $pemesanan->nama_design }}</td>
-                                                <td>{{ $pemesanan->jenis_barang }}</td> <!-- Tampilkan Jenis Barang -->
-                                                <td>{{ $pemesanan->QTY }}</td>
-                                                <td>{{ $pemesanan->tgl_pemesanan }}</td>
-                                                <td>{{ $pemesanan->tgl_deadline }}</td>
+                                                <td>{{ $pemesanan->jenis_barang }}</td>
+                                                <td>{{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_pemesanan)->format('d-m-Y') }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_deadline)->format('d-m-Y') }}
+                                                </td>
                                                 <td>
                                                     @if ($pemesanan->status === 'selesai')
                                                         <span class="badge bg-success">DONE</span>
@@ -85,10 +87,10 @@
                                                             class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
-                                                            @if(Auth::user() && Auth::user()->role == 'admin')
-                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                        @endif
-
+                                                            @if (Auth::user() && Auth::user()->role == 'admin')
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-sm">Delete</button>
+                                                            @endif
                                                         </form>
                                                     </div>
                                                 </td>
@@ -96,12 +98,10 @@
                                         @empty
                                             <tr>
                                                 <td colspan="9" class="text-center">Tidak ada data ditemukan</td>
-                                                <!-- Updated colspan -->
                                             </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
-
                             </div>
                             <!-- End Responsive Table -->
                         </div>
@@ -129,7 +129,7 @@
                     if (direction < 0) {
                         row.parentNode.insertBefore(row, targetRow);
                     } else {
-                        row.parentNode.insertBefore(targetRow, row);
+                        row.parentNode.insertBefore(targetRow, row.nextSibling);
                     }
 
                     updateIndexes();

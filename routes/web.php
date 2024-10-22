@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PemesananController;
 
 /*
-|--------------------------------------------------------------------------
+|-----------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
+|-----------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
@@ -23,15 +23,12 @@ Route::get('/', function () {
 Route::get('/login', [PemesananController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [PemesananController::class, 'login']);
 
-// Registration routes (optional)
+// Registration routes
 Route::get('/register', [PemesananController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [PemesananController::class, 'register']);
 
 // Protecting routes - Only accessible to authenticated users
 Route::middleware('auth')->group(function () {
-
-
-
     // Dashboard route
     Route::get('/home', [PemesananController::class, 'index'])->name('index');
 
@@ -40,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/store', [PemesananController::class, 'store'])->name('store');
 
     Route::get('/pemesanans/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
-    Route::post('/pemesanans/{id}/edit', [PemesananController::class, 'update']);
+    Route::post('/pemesanans/{id}', [PemesananController::class, 'update'])->name('update');
 
     Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
     Route::delete('/pemesanan/{id}', [PemesananController::class, 'destroy'])->name('delete');
