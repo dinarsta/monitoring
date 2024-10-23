@@ -32,15 +32,12 @@ Route::middleware('auth')->group(function () {
     // Dashboard route
     Route::get('/home', [PemesananController::class, 'index'])->name('index');
 
-    // Routes for managing orders
     Route::get('/create', [PemesananController::class, 'create'])->name('create');
     Route::post('/store', [PemesananController::class, 'store'])->name('store');
 
-    Route::get('/pemesanans/{id}/edit', [PemesananController::class, 'edit'])->name('edit');
-    Route::post('/pemesanans/{id}', [PemesananController::class, 'update'])->name('update');
-
+    // Routes for managing orders
+    Route::resource('pemesanan', PemesananController::class)->except(['show']); // This will create all the RESTful routes needed
     Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
-    Route::delete('/pemesanan/{id}', [PemesananController::class, 'destroy'])->name('delete');
 
     // Logout route
     Route::post('/logout', [PemesananController::class, 'logout'])->name('logout');
