@@ -174,4 +174,23 @@ class PemesananController extends Controller
         Auth::logout();
         return redirect('/login');
     }
+
+    //
+    public function updateStatus(Request $request, $id)
+{
+    // Find the order by its ID
+    $pemesanan = Pemesanan::findOrFail($id);
+
+    // Validate that the status is one of the allowed values
+    $validatedData = $request->validate([
+        'status' => 'required|in:on progress,done,selesai'
+    ]);
+
+    // Update the status with the new value
+    $pemesanan->status = $request->input('status');
+    $pemesanan->save();
+
+    // Redirect back to the index page with a success message
+    return redirect()->route('index')->with('success', 'Order status updated successfully.');
+}
 }

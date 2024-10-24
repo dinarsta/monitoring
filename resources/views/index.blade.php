@@ -31,6 +31,7 @@
                             </form>
 
                             <!-- Responsive Table -->
+
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead>
@@ -42,6 +43,7 @@
                                             <th>QTY</th>
                                             <th>Tanggal Pemesanan</th>
                                             <th>Tanggal Deadline</th>
+                                            <th>Status</th>
                                             <th colspan="3">Aksi</th>
                                         </tr>
                                     </thead>
@@ -56,6 +58,20 @@
                                                 <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_pemesanan)->format('d-m-Y') }}
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_deadline)->format('d-m-Y') }}
+                                                </td>
+                                                <td>
+                                                <td>
+                                                    @if ($pemesanan->status === 'selesai')
+                                                        <span class="badge bg-success">DONE</span>
+                                                    @else
+                                                        <form action="{{ route('mark-as-completed', $pemesanan->id) }}"
+                                                            method="POST" class="d-inline">
+                                                            @csrf
+                                                            <button type="submit" class="badge bg-primary border-0">ON
+                                                                PROGRESS</button>
+                                                        </form>
+                                                    @endif
+                                                </td>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-warning btn-small"
@@ -93,6 +109,7 @@
                                     </tbody>
                                 </table>
                             </div>
+
 
                             <!-- Edit Modal -->
                             <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel"

@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
 //
 Route::get('/pemesanan', [PemesananController::class, 'index'])->name('index');
+Route::put('/pemesanan/{id}/updateStatus', [PemesananController::class, 'updateStatus'])->name('pemesanan.updateStatus');
+
 
     // Logout route
     Route::post('/logout', [PemesananController::class, 'logout'])->name('logout');
