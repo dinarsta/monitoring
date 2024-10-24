@@ -70,25 +70,33 @@ class PemesananController extends Controller
         return view('edit', compact('pemesanan'));
     }
 
+
     public function update(Request $request, $id)
     {
-        // Validate incoming request data
         $request->validate([
             'atas_nama' => 'required|string|max:255',
             'nama_design' => 'required|string|max:255',
+            'jenis_barang' => 'required|string',
             'QTY' => 'required|integer',
             'tgl_pemesanan' => 'required|date',
             'tgl_deadline' => 'required|date',
         ]);
 
-        // Find the order and update it
         $pemesanan = Pemesanan::findOrFail($id);
-        $pemesanan->update($request->all());
-        // Do not set status here
+        $pemesanan->atas_nama = $request->input('atas_nama');
+        $pemesanan->nama_design = $request->input('nama_design');
+        $pemesanan->jenis_barang = $request->input('jenis_barang');
+        $pemesanan->QTY = $request->input('QTY');
+        $pemesanan->tgl_pemesanan = $request->input('tgl_pemesanan');
+        $pemesanan->tgl_deadline = $request->input('tgl_deadline');
+
+        // Save the updated model
         $pemesanan->save();
 
-        return redirect()->route('index')->with('success', 'Order updated successfully.');
+        return redirect()->route('index')->with('success', 'Pesanan berhasil diperbarui.');
     }
+
+
 
     public function destroy($id)
     {

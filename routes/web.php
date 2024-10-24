@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     // Routes for managing orders
     Route::resource('pemesanan', PemesananController::class)->except(['show']); // This will create all the RESTful routes needed
     Route::post('/pemesanan/{id}/complete', [PemesananController::class, 'markAsCompleted'])->name('mark-as-completed');
+//
+Route::get('/pemesanan', [PemesananController::class, 'index'])->name('index');
 
     // Logout route
     Route::post('/logout', [PemesananController::class, 'logout'])->name('logout');
