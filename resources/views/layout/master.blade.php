@@ -121,6 +121,15 @@
             </li><!-- End Contact Page Nav -->
             @endif
 
+            @if(Auth::user() && Auth::user()->role == 'admin')
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('history') }}">
+                    <i class="bi bi-file-text"></i>
+                    <span>History</span>
+                </a>
+            </li><!-- End Contact Page Nav -->
+            @endif
+
 
 
         </ul>
@@ -149,6 +158,7 @@
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 </body>

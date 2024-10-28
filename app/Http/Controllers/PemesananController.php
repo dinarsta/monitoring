@@ -101,9 +101,23 @@ class PemesananController extends Controller
     public function destroy($id)
     {
         $pemesanan = Pemesanan::findOrFail($id);
+
+        // Pindahkan data ke tabel `deleted_orders_history`
+        \App\Models\DeletedOrderHistory::create([
+            'pemesanan_id' => $pemesanan->id,
+            'atas_nama' => $pemesanan->atas_nama,
+            'nama_design' => $pemesanan->nama_design,
+            'QTY' => $pemesanan->QTY,
+            'tgl_pemesanan' => $pemesanan->tgl_pemesanan,
+            'tgl_deadline' => $pemesanan->tgl_deadline,
+            'jenis_barang' => $pemesanan->jenis_barang,
+            'deleted_at' => now(),
+        ]);
+
+        // Hapus data dari tabel `pemesanans`
         $pemesanan->delete();
 
-        return redirect()->route('index')->with('success', 'Order deleted successfully.');
+        return redirect()->route('index')->with('success', 'Order deleted successfully and added to history.');
     }
 
     public function markAsCompleted($id)
@@ -193,4 +207,22 @@ class PemesananController extends Controller
     // Redirect back to the index page with a success message
     return redirect()->route('index')->with('success', 'Order status updated successfully.');
 }
+
+
+public function history()
+{
+    // Retrieve all deleted orders from your DeletedOrderHistory model
+    $deletedOrders = \App\Models\DeletedOrderHistory::all();
+    return view('history', compact('deletedOrders'));
+}
+
+
+// live server
+public function getLatestOrders()
+{
+    $pemesanans = Pemesanan::all(); // You can customize this query as needed
+    return response()->json($pemesanans);
+}
+
+
 }

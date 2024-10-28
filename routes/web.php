@@ -43,6 +43,11 @@ Route::get('/pemesanan', [PemesananController::class, 'index'])->name('index');
 Route::put('/pemesanan/{id}/updateStatus', [PemesananController::class, 'updateStatus'])->name('pemesanan.updateStatus');
 
 
+Route::get('/history', [PemesananController::class, 'history'])->name('history');
+
+// live server
+Route::get('/orders/latest', [PemesananController::class, 'getLatestOrders'])->name('orders.latest');
+
     // Logout route
     Route::post('/logout', [PemesananController::class, 'logout'])->name('logout');
 });

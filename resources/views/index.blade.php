@@ -1,6 +1,7 @@
 @extends('layout.master')
 
 @section('content')
+<div id="ordersContainer">
     <main id="main" class="main">
         <div class="pagetitle">
             <h1>Daftar Pesanan</h1>
@@ -12,7 +13,7 @@
             </nav>
         </div><!-- End Page Title -->
 
-        <section class="section dashboard">
+        <class="section dashboard">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -179,7 +180,46 @@
                                 </div>
                             </div>
 
+
                             <script>
+                                $(document).ready(function() {
+                                    // Function to fetch the latest orders
+                                    function fetchLatestOrders() {
+                                        $.ajax({
+                                            url: "{{ route('orders.latest') }}",
+                                            method: 'GET',
+                                            success: function(data) {
+                                                // Assuming you have a container with id 'ordersContainer'
+                                                var ordersContainer = $('#ordersContainer');
+                                                ordersContainer.empty(); // Clear existing orders
+
+                                                // Append latest orders to the container
+                                                data.forEach(function(order) {
+                                                    ordersContainer.append(
+                                                        `<div class="order">
+                                                            <p><strong>Atas Nama:</strong> ${order.atas_nama}</p>
+                                                            <p><strong>Nama Design:</strong> ${order.nama_design}</p>
+                                                            <p><strong>QTY:</strong> ${order.QTY}</p>
+                                                            <p><strong>Tgl Pemesanan:</strong> ${order.tgl_pemesanan}</p>
+                                                            <p><strong>Tgl Deadline:</strong> ${order.tgl_deadline}</p>
+                                                            <p><strong>Status:</strong> ${order.status}</p>
+                                                        </div>`
+                                                    );
+                                                });
+                                            },
+                                            error: function(xhr) {
+                                                console.error('Failed to fetch orders:', xhr);
+                                            }
+                                        });
+                                    }
+
+                                    // Set interval for fetching orders every 5 seconds (5000 ms)
+                                    setInterval(fetchLatestOrders, 5000);
+                                });
+                                </script>
+
+
+                           <script>
                                 function moveRow(button, direction) {
                                     const row = button.closest('tr');
                                     const orderTableBody = document.getElementById('orderTableBody');
@@ -229,6 +269,5 @@
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
-@endsection
+        </class>
+        @endsection
