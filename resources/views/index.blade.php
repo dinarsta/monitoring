@@ -1,19 +1,19 @@
 @extends('layout.master')
 
 @section('content')
-<div id="ordersContainer">
-    <main id="main" class="main">
-        <div class="pagetitle">
-            <h1>Daftar Pesanan</h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Daftar Pesanan</li>
-                </ol>
-            </nav>
-        </div><!-- End Page Title -->
+    <div id="ordersContainer">
+        <main id="main" class="main">
+            <div class="pagetitle">
+                <h1>Daftar Pesanan</h1>
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Daftar Pesanan</li>
+                    </ol>
+                </nav>
+            </div><!-- End Page Title -->
 
-        <class="section dashboard">
+            <class="section dashboard">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -33,6 +33,31 @@
 
                             <!-- Responsive Table -->
 
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
+                                aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Apakah anda yakin ingin menghapus desain <strong id="designName"></strong>
+                                                atas nama <strong id="customerName"></strong>?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger"
+                                                id="confirmDeleteButton">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table Structure -->
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead>
@@ -61,7 +86,6 @@
                                                 <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_deadline)->format('d-m-Y') }}
                                                 </td>
                                                 <td>
-                                                <td>
                                                     @if ($pemesanan->status === 'selesai')
                                                         <span class="badge bg-success">DONE</span>
                                                     @else
@@ -72,7 +96,6 @@
                                                                 PROGRESS</button>
                                                         </form>
                                                     @endif
-                                                </td>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-warning btn-small"
@@ -86,6 +109,7 @@
                                                         <i class="fas fa-arrow-down icon-small"></i>
                                                     </button>
                                                 </td>
+
                                                 <td>
                                                     <button type="button" class="btn btn-info btn-small"
                                                         onclick="openEditModal({{ json_encode($pemesanan) }})"
@@ -94,22 +118,45 @@
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <form action="{{ route('pemesanan.destroy', $pemesanan->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-small"
-                                                            onclick="return confirmDelete({{ $pemesanan->id }}, '{{ $pemesanan->nama_design }}', '{{ $pemesanan->atas_nama }}')"
-                                                            aria-label="Delete">
-                                                            <i class="fas fa-trash icon-small"></i>
-                                                        </button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-danger btn-small"
+                                                        onclick="showDeleteConfirmation({{ $pemesanan->id }}, '{{ $pemesanan->nama_design }}', '{{ $pemesanan->atas_nama }}')"
+                                                        aria-label="Delete">
+                                                        <i class="fas fa-trash icon-small"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
+
+                            <script>
+                                let deleteFormAction;
+
+                                function showDeleteConfirmation(id, designName, customerName) {
+                                    // Set the design and customer names in the modal
+                                    document.getElementById('designName').textContent = designName;
+                                    document.getElementById('customerName').textContent = customerName;
+
+                                    // Set the form action for deletion
+                                    deleteFormAction = "{{ route('pemesanan.destroy', ':id') }}".replace(':id', id);
+
+                                    // Show the modal
+                                    var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+                                    deleteModal.show();
+                                }
+
+                                document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+                                    // Create and submit a form dynamically to delete the item
+                                    const form = document.createElement('form');
+                                    form.method = 'POST';
+                                    form.action = deleteFormAction;
+                                    form.innerHTML = '@csrf @method('DELETE')';
+                                    document.body.appendChild(form);
+                                    form.submit();
+                                });
+                            </script>
+
 
 
                             <!-- Edit Modal -->
@@ -216,10 +263,14 @@
                                     // Set interval for fetching orders every 5 seconds (5000 ms)
                                     setInterval(fetchLatestOrders, 5000);
                                 });
-                                </script>
+                            </script>
 
 
-                           <script>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    loadRowOrder();
+                                });
+
                                 function moveRow(button, direction) {
                                     const row = button.closest('tr');
                                     const orderTableBody = document.getElementById('orderTableBody');
@@ -230,6 +281,7 @@
                                         orderTableBody.insertBefore(row.nextElementSibling, row);
                                     }
                                     updateIndexes(); // Update row numbers after movement
+                                    saveRowOrder(); // Save the new order
                                 }
 
                                 function openEditModal(pemesanan) {
@@ -240,10 +292,8 @@
                                     document.getElementById('tgl_pemesanan').value = pemesanan.tgl_pemesanan || '';
                                     document.getElementById('tgl_deadline').value = pemesanan.tgl_deadline || '';
 
-                                    // Update the form action URL for editing
                                     document.getElementById('editOrderForm').action = '/pemesanan/' + pemesanan.id;
 
-                                    // Show modal
                                     var modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
                                     modal.show();
                                 }
@@ -264,10 +314,30 @@
                                     const jenisBarangLainDiv = document.getElementById('jenis_barang_lain_div');
                                     jenisBarangLainDiv.style.display = jenisBarangSelect.value === 'lainnya' ? 'block' : 'none';
                                 }
+
+                                function saveRowOrder() {
+                                    const rows = document.querySelectorAll('#orderTableBody tr');
+                                    const order = Array.from(rows).map(row => row.dataset.id); // Assuming each row has a unique data-id attribute
+                                    localStorage.setItem('rowOrder', JSON.stringify(order));
+                                }
+
+                                function loadRowOrder() {
+                                    const order = JSON.parse(localStorage.getItem('rowOrder') || '[]');
+                                    const orderTableBody = document.getElementById('orderTableBody');
+
+                                    order.forEach(id => {
+                                        const row = document.querySelector(`#orderTableBody tr[data-id="${id}"]`);
+                                        if (row) {
+                                            orderTableBody.appendChild(row);
+                                        }
+                                    });
+                                    updateIndexes();
+                                }
                             </script>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </class>
+            </class>
         @endsection
