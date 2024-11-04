@@ -11,24 +11,33 @@ use Illuminate\Validation\ValidationException;
 
 class PemesananController extends Controller
 {
+
     public function index(Request $request)
-    {
-        // Fetching all orders with search functionality
-        $query = Pemesanan::query();
+{
+    $query = Pemesanan::query();
 
-        // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where('atas_nama', 'like', "%{$searchTerm}%")
-                  ->orWhere('nama_design', 'like', "%{$searchTerm}%");
-        }
-
-        // Fetch all orders based on the query
-        $pemesanans = $query->get();
-
-        // Return the view with all orders
-        return view('index', compact('pemesanans'));
+    // Pencarian berdasarkan nama
+    if ($request->has('search') && $request->search != '') {
+        $query->where('atas_nama', 'like', '%' . $request->search . '%');
     }
+
+    // Filter berdasarkan bulan
+    if ($request->has('month') && $request->month != '') {
+        $query->whereMonth('tgl_pemesanan', $request->month);
+    }
+
+    // Filter berdasarkan tahun
+    if ($request->has('year') && $request->year != '') {
+        $query->whereYear('tgl_pemesanan', $request->year);
+    }
+
+    // Mendapatkan semua data pemesanan
+    $pemesanans = $query->get();
+
+    // Mengirimkan data ke view
+    return view('index', compact('pemesanans'));
+}
+
 
     public function create()
     {

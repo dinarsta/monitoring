@@ -25,6 +25,24 @@
                                 <div class="input-group">
                                     <input type="text" name="search" value="{{ request('search') }}"
                                         class="form-control" placeholder="Cari pesanan..." aria-label="Search orders">
+                                    <select name="month" class="form-select">
+                                        <option value="">-- Pilih Bulan --</option>
+                                        @foreach (range(1, 12) as $month)
+                                            <option value="{{ $month }}"
+                                                {{ request('month') == $month ? 'selected' : '' }}>
+                                                {{ DateTime::createFromFormat('!m', $month)->format('F') }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <select name="year" class="form-select">
+                                        <option value="">-- Pilih Tahun --</option>
+                                        @foreach (range(date('Y'), 2000) as $year)
+                                            <option value="{{ $year }}"
+                                                {{ request('year') == $year ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="bi bi-search"></i>
                                     </button>
@@ -261,7 +279,7 @@
                                     }
 
                                     // Set interval for fetching orders every 5 seconds (5000 ms)
-                                    setInterval(fetchLatestOrders, 5000);
+                                    setInterval(fetchLatestOrders, 0);
                                 });
                             </script>
 
