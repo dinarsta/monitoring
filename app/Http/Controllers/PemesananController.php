@@ -218,12 +218,32 @@ class PemesananController extends Controller
 }
 
 
-public function history()
+public function history(Request $request)
 {
-    // Retrieve all deleted orders from your DeletedOrderHistory model
-    $deletedOrders = \App\Models\DeletedOrderHistory::all();
+    $query = \App\Models\DeletedOrderHistory::query();
+
+    // Pencarian berdasarkan nama
+    if ($request->has('search') && $request->search != '') {
+        $query->where('atas_nama', 'like', '%' . $request->search . '%');
+    }
+
+    // Filter berdasarkan bulan
+    if ($request->has('month') && $request->month != '') {
+        $query->whereMonth('tgl_pemesanan', $request->month);
+    }
+
+    // Filter berdasarkan tahun
+    if ($request->has('year') && $request->year != '') {
+        $query->whereYear('tgl_pemesanan', $request->year);
+    }
+
+    // Mendapatkan semua data pemesanan yang dihapus
+    $deletedOrders = $query->get();
+
+    // Mengirimkan data ke view
     return view('history', compact('deletedOrders'));
 }
+
 
 
 // live server
