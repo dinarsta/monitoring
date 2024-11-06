@@ -11,7 +11,8 @@
                         <li class="breadcrumb-item active">Daftar Pesanan</li>
                     </ol>
                 </nav>
-            </div><!-- End Page Title -->
+            </div>
+            <!-- End Page Title -->
 
             <class="section dashboard">
             <div class="row">
@@ -246,42 +247,6 @@
                             </div>
 
 
-                            <script>
-                                $(document).ready(function() {
-                                    // Function to fetch the latest orders
-                                    function fetchLatestOrders() {
-                                        $.ajax({
-                                            url: "{{ route('orders.latest') }}",
-                                            method: 'GET',
-                                            success: function(data) {
-                                                // Assuming you have a container with id 'ordersContainer'
-                                                var ordersContainer = $('#ordersContainer');
-                                                ordersContainer.empty(); // Clear existing orders
-
-                                                // Append latest orders to the container
-                                                data.forEach(function(order) {
-                                                    ordersContainer.append(
-                                                        `<div class="order">
-                                                            <p><strong>Atas Nama:</strong> ${order.atas_nama}</p>
-                                                            <p><strong>Nama Design:</strong> ${order.nama_design}</p>
-                                                            <p><strong>QTY:</strong> ${order.QTY}</p>
-                                                            <p><strong>Tgl Pemesanan:</strong> ${order.tgl_pemesanan}</p>
-                                                            <p><strong>Tgl Deadline:</strong> ${order.tgl_deadline}</p>
-                                                            <p><strong>Status:</strong> ${order.status}</p>
-                                                        </div>`
-                                                    );
-                                                });
-                                            },
-                                            error: function(xhr) {
-                                                console.error('Failed to fetch orders:', xhr);
-                                            }
-                                        });
-                                    }
-
-                                    // Set interval for fetching orders every 5 seconds (5000 ms)
-                                    setInterval(fetchLatestOrders, 0);
-                                });
-                            </script>
 
 
                             <script>
@@ -298,6 +263,7 @@
                                     } else if (direction === 1 && row.nextElementSibling) {
                                         orderTableBody.insertBefore(row.nextElementSibling, row);
                                     }
+
                                     updateIndexes(); // Update row numbers after movement
                                     saveRowOrder(); // Save the new order
                                 }
@@ -333,26 +299,65 @@
                                     jenisBarangLainDiv.style.display = jenisBarangSelect.value === 'lainnya' ? 'block' : 'none';
                                 }
 
+                                function loadRowOrder() {
+                                    const orderTableBody = document.getElementById('orderTableBody');
+                                    let savedOrder = localStorage.getItem('rowOrder');
+                                    let allRows = Array.from(orderTableBody.querySelectorAll('tr'));
+
+                                    if (savedOrder) {
+                                        let order = JSON.parse(savedOrder);
+
+                                        // Append rows in saved order
+                                        order.forEach(id => {
+                                            let row = document.querySelector(`tr[data-id="${id}"]`);
+                                            if (row) orderTableBody.appendChild(row);
+                                        });
+
+                                        // Append any new rows that weren't saved in the previous order
+                                        allRows.forEach(row => {
+                                            if (!order.includes(row.dataset.id)) {
+                                                orderTableBody.appendChild(row);
+                                            }
+                                        });
+
+                                        updateIndexes(); // Update row numbers after loading the saved order
+                                    }
+                                }
+
                                 function saveRowOrder() {
-                                    const rows = document.querySelectorAll('#orderTableBody tr');
-                                    const order = Array.from(rows).map(row => row.dataset.id); // Assuming each row has a unique data-id attribute
+                                    const order = Array.from(document.querySelectorAll('#orderTableBody tr')).map(row => row.dataset.id);
                                     localStorage.setItem('rowOrder', JSON.stringify(order));
                                 }
 
-                                function loadRowOrder() {
-                                    const order = JSON.parse(localStorage.getItem('rowOrder') || '[]');
+                                function addNewRow(data) {
                                     const orderTableBody = document.getElementById('orderTableBody');
 
-                                    order.forEach(id => {
-                                        const row = document.querySelector(`#orderTableBody tr[data-id="${id}"]`);
-                                        if (row) {
-                                            orderTableBody.appendChild(row);
-                                        }
-                                    });
+                                    // Create a new row and append data
+                                    const newRow = document.createElement('tr');
+                                    newRow.setAttribute('data-id', data.id); // Set data-id for saving order
+                                    newRow.innerHTML = `
+                                        <td></td> <!-- For the index, which will be updated -->
+                                        <td>${data.atas_nama}</td>
+                                        <td>${data.nama_design}</td>
+                                        <td>${data.jenis_barang}</td>
+                                        <td>${data.QTY}</td>
+                                        <td>${data.tgl_pemesanan}</td>
+                                        <td>${data.tgl_deadline}</td>
+                                        <td>
+                                            <!-- Add any actions you want, like edit or delete buttons -->
+                                            <button onclick="openEditModal(${JSON.stringify(data)})">Edit</button>
+                                            <button onclick="confirmDelete(${data.id}, '${data.nama_design}', '${data.atas_nama}')">Delete</button>
+                                        </td>
+                                    `;
+
+                                    // Append new row to the end of the table
+                                    orderTableBody.appendChild(newRow);
+
+                                    // Update index and save new order
                                     updateIndexes();
+                                    saveRowOrder();
                                 }
                             </script>
-
                         </div>
                     </div>
                 </div>
