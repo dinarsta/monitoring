@@ -38,7 +38,6 @@ class PemesananController extends Controller
     return view('index', compact('pemesanans'));
 }
 
-
     public function create()
     {
         return view('create');
@@ -105,8 +104,6 @@ class PemesananController extends Controller
         return redirect()->route('index')->with('success', 'Pesanan berhasil diperbarui.');
     }
 
-
-
     public function destroy($id)
     {
         $pemesanan = Pemesanan::findOrFail($id);
@@ -120,6 +117,7 @@ class PemesananController extends Controller
             'tgl_pemesanan' => $pemesanan->tgl_pemesanan,
             'tgl_deadline' => $pemesanan->tgl_deadline,
             'jenis_barang' => $pemesanan->jenis_barang,
+            'status' => $pemesanan->status,
             'deleted_at' => now(),
         ]);
 
@@ -244,14 +242,11 @@ public function history(Request $request)
     return view('history', compact('deletedOrders'));
 }
 
-
-
 // live server
 public function getLatestOrders()
 {
     $pemesanans = Pemesanan::all(); // You can customize this query as needed
     return response()->json($pemesanans);
 }
-
 
 }

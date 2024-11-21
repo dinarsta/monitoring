@@ -52,35 +52,36 @@
 </form>
 
 
-                            <!-- Responsive Table -->
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>NO</th>
-                                            <th>Atas Nama</th>
-                                            <th>Nama Design</th>
-                                            <th>QTY</th>
-                                            <th>Tanggal Pemesanan</th>
-                                            <th>Tanggal Deadline</th>
-                                            <th>Deleted At</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($deletedOrders as $order)
-                                            <tr>
-                                                <td>{{ $order->id }}</td>
-                                                <td>{{ $order->atas_nama }}</td>
-                                                <td>{{ $order->nama_design }}</td>
-                                                <td>{{ number_format($order->QTY, 0, ',', '.') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($order->tgl_pemesanan)->format('d-m-Y') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($order->tgl_deadline)->format('d-m-Y') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($order->deleted_at)->format('d-m-Y H:i') }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+<!-- Responsive Table -->
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>NO</th>
+                <th>Atas Nama</th>
+                <th>Nama Design</th>
+                <th>QTY</th>
+                <th>Tanggal Pemesanan</th>
+                <th>Tanggal Deadline</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($deletedOrders as $order)
+                <tr>
+                    <td>{{ $order->id }}</td>
+                    <td>{{ $order->atas_nama }}</td>
+                    <td>{{ $order->nama_design }}</td>
+                    <td>{{ number_format($order->QTY, 0, ',', '.') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->tgl_pemesanan)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->tgl_deadline)->format('d-m-Y') }}</td>
+                    <td>{{ $order->status }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
                         </div>
                     </div>
                 </div>

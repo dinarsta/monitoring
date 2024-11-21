@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('tgl_pemesanan');
             $table->date('tgl_deadline');
             $table->string('jenis_barang');
+            $table->string('status');
             $table->timestamp('deleted_at');
             $table->timestamps();
 
