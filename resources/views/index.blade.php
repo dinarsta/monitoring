@@ -92,19 +92,47 @@
                                             <th colspan="3">Aksi</th>
                                         </tr>
                                     </thead>
+
                                     <tbody id="orderTableBody">
+                                        @php
+                                            $lastRowTglPemesanan = null; // Variabel untuk menyimpan tanggal pemesanan baris terakhir
+                                        @endphp
                                         @foreach ($pemesanans as $pemesanan)
-                                            <tr data-id="{{ $pemesanan->id }}">
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $pemesanan->atas_nama }}</td>
-                                                <td>{{ $pemesanan->nama_design }}</td>
-                                                <td>{{ $pemesanan->jenis_barang }}</td>
-                                                <td>{{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_pemesanan)->format('d-m-Y') }}
+                                            @php
+                                                // Dapatkan tanggal sekarang
+                                                $now = \Carbon\Carbon::now();
+                                                $tglPemesanan = \Carbon\Carbon::parse($pemesanan->tgl_pemesanan);
+                                                $tglDeadline = \Carbon\Carbon::parse($pemesanan->tgl_deadline);
+
+                                                // Perhitungan selisih hari
+                                                $isPesanClose = $now->diffInDays($tglPemesanan, false) <= 1;
+                                                $isDeadlineClose = $now->diffInDays($tglDeadline, false) <= 1;
+
+                                                // Status apakah "selesai"
+                                                $isDone = $pemesanan->status === 'selesai';
+
+                                                // Logika untuk warna merah hanya berlaku jika tgl_pemesanan dan tgl_deadline dekat dengan tanggal sekarang
+                                                $highlightPesanan = !$isDone && $isPesanClose && $isDeadlineClose;
+                                            @endphp
+                                            <tr>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    {{ $loop->iteration }}</td>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    {{ $pemesanan->atas_nama }}</td>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    {{ $pemesanan->nama_design }}</td>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    {{ $pemesanan->jenis_barang }}</td>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    {{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    {{ $tglPemesanan->format('d-m-Y') }}
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($pemesanan->tgl_deadline)->format('d-m-Y') }}
+                                                <td
+                                                    class="{{ !$isDone && $isDeadlineClose ? 'bg-danger text-white' : '' }}">
+                                                    {{ $tglDeadline->format('d-m-Y') }}
                                                 </td>
-                                                <td>
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
                                                     @if ($pemesanan->status === 'selesai')
                                                         <span class="badge bg-success">DONE</span>
                                                     @else
@@ -116,31 +144,30 @@
                                                         </form>
                                                     @endif
                                                 </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-warning btn-small"
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    <button type="button" class="btn btn-warning btn-sm"
                                                         onclick="moveRow(this, -1)" aria-label="Move Up">
-                                                        <i class="fas fa-arrow-up icon-small"></i>
+                                                        <i class="fas fa-arrow-up"></i>
                                                     </button>
                                                 </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-warning btn-small"
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    <button type="button" class="btn btn-warning btn-sm"
                                                         onclick="moveRow(this, 1)" aria-label="Move Down">
-                                                        <i class="fas fa-arrow-down icon-small"></i>
+                                                        <i class="fas fa-arrow-down"></i>
                                                     </button>
                                                 </td>
-
-                                                <td>
-                                                    <button type="button" class="btn btn-info btn-small"
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    <button type="button" class="btn btn-info btn-sm"
                                                         onclick="openEditModal({{ json_encode($pemesanan) }})"
                                                         aria-label="Edit">
-                                                        <i class="fas fa-edit icon-small"></i>
+                                                        <i class="fas fa-edit"></i>
                                                     </button>
                                                 </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger btn-small"
+                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                    <button type="button" class="btn btn-danger btn-sm"
                                                         onclick="showDeleteConfirmation({{ $pemesanan->id }}, '{{ $pemesanan->nama_design }}', '{{ $pemesanan->atas_nama }}')"
                                                         aria-label="Delete">
-                                                        <i class="fas fa-trash icon-small"></i>
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -148,6 +175,7 @@
                                     </tbody>
                                 </table>
                             </div>
+
 
                             <script>
                                 let deleteFormAction;
@@ -179,8 +207,8 @@
 
 
                             <!-- Edit Modal -->
-                            <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel"
-                                aria-hidden="true">
+                            <div class="modal fade" id="editOrderModal" tabindex="-1"
+                                aria-labelledby="editOrderModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form id="editOrderForm" method="POST">
                                         @csrf
