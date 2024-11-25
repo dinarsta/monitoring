@@ -50,31 +50,37 @@
                                 </div>
                             </form>
 
-                            <!-- Responsive Table -->
 
-                            <!-- Delete Confirmation Modal -->
+
+                            <!-- Delete Modal -->
                             <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
-                                aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Apakah anda yakin ingin menghapus desain <strong id="designName"></strong>
-                                                atas nama <strong id="customerName"></strong>?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Cancel</button>
-                                            <button type="button" class="btn btn-danger"
-                                                id="confirmDeleteButton">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                           <div class="modal-dialog">
+                               <div class="modal-content shadow-lg rounded-3">
+                                   <div class="modal-header border-0">
+                                       <h5 class="modal-title text-danger" id="deleteConfirmationModalLabel">
+                                           <i class="fas fa-trash-alt me-2 fs-4"></i> Confirm Deletion
+                                       </h5>
+                                       <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                               aria-label="Close"></button>
+                                   </div>
+                                   <div class="modal-body text-center">
+                                       <p class="text-dark">Apakah anda yakin ingin menghapus desain <strong id="designName"></strong>
+                                           atas nama <strong id="customerName"></strong>?</p>
+                                   </div>
+                                   <div class="modal-footer border-0">
+                                       <button type="button" class="btn btn-outline-secondary px-4 py-2" data-bs-dismiss="modal">
+                                           Cancel
+                                       </button>
+                                       <button type="button" class="btn btn-danger px-4 py-2 shadow-lg" id="confirmDeleteButton">
+                                           <i class="fas fa-trash-alt me-2"></i> Delete
+                                       </button>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+
+
 
                             <!-- Table Structure -->
                             <div class="table-responsive">
@@ -94,45 +100,23 @@
                                     </thead>
 
                                     <tbody id="orderTableBody">
-                                        @php
-                                            $lastRowTglPemesanan = null; // Variabel untuk menyimpan tanggal pemesanan baris terakhir
-                                        @endphp
                                         @foreach ($pemesanans as $pemesanan)
                                             @php
-                                                // Dapatkan tanggal sekarang
-                                                $now = \Carbon\Carbon::now();
                                                 $tglPemesanan = \Carbon\Carbon::parse($pemesanan->tgl_pemesanan);
                                                 $tglDeadline = \Carbon\Carbon::parse($pemesanan->tgl_deadline);
-
-                                                // Perhitungan selisih hari
-                                                $isPesanClose = $now->diffInDays($tglPemesanan, false) <= 1;
-                                                $isDeadlineClose = $now->diffInDays($tglDeadline, false) <= 1;
-
-                                                // Status apakah "selesai"
-                                                $isDone = $pemesanan->status === 'selesai';
-
-                                                // Logika untuk warna merah hanya berlaku jika tgl_pemesanan dan tgl_deadline dekat dengan tanggal sekarang
-                                                $highlightPesanan = !$isDone && $isPesanClose && $isDeadlineClose;
+                                                $selisihHari = $tglPemesanan->diffInDays($tglDeadline);
+                                                $isWarning = $selisihHari <= 3 && $pemesanan->status !== 'selesai';
                                             @endphp
-                                            <tr>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
-                                                    {{ $loop->iteration }}</td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
-                                                    {{ $pemesanan->atas_nama }}</td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
-                                                    {{ $pemesanan->nama_design }}</td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
-                                                    {{ $pemesanan->jenis_barang }}</td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
-                                                    {{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
-                                                    {{ $tglPemesanan->format('d-m-Y') }}
-                                                </td>
-                                                <td
-                                                    class="{{ !$isDone && $isDeadlineClose ? 'bg-danger text-white' : '' }}">
-                                                    {{ $tglDeadline->format('d-m-Y') }}
-                                                </td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                            <tr data-id="{{ $pemesanan->id }}"
+                                                @if ($isWarning) class="table-danger" @endif>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $pemesanan->atas_nama }}</td>
+                                                <td>{{ $pemesanan->nama_design }}</td>
+                                                <td>{{ $pemesanan->jenis_barang }}</td>
+                                                <td>{{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
+                                                <td>{{ $tglPemesanan->format('d-m-Y') }}</td>
+                                                <td>{{ $tglDeadline->format('d-m-Y') }}</td>
+                                                <td>
                                                     @if ($pemesanan->status === 'selesai')
                                                         <span class="badge bg-success">DONE</span>
                                                     @else
@@ -144,26 +128,26 @@
                                                         </form>
                                                     @endif
                                                 </td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                <td>
                                                     <button type="button" class="btn btn-warning btn-sm"
                                                         onclick="moveRow(this, -1)" aria-label="Move Up">
                                                         <i class="fas fa-arrow-up"></i>
                                                     </button>
                                                 </td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                <td>
                                                     <button type="button" class="btn btn-warning btn-sm"
                                                         onclick="moveRow(this, 1)" aria-label="Move Down">
                                                         <i class="fas fa-arrow-down"></i>
                                                     </button>
                                                 </td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                <td>
                                                     <button type="button" class="btn btn-info btn-sm"
                                                         onclick="openEditModal({{ json_encode($pemesanan) }})"
                                                         aria-label="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
                                                 </td>
-                                                <td class="{{ $highlightPesanan ? 'bg-danger text-white' : '' }}">
+                                                <td>
                                                     <button type="button" class="btn btn-danger btn-sm"
                                                         onclick="showDeleteConfirmation({{ $pemesanan->id }}, '{{ $pemesanan->nama_design }}', '{{ $pemesanan->atas_nama }}')"
                                                         aria-label="Delete">
@@ -175,6 +159,7 @@
                                     </tbody>
                                 </table>
                             </div>
+
 
 
                             <script>
@@ -205,10 +190,9 @@
                             </script>
 
 
-
                             <!-- Edit Modal -->
-                            <div class="modal fade" id="editOrderModal" tabindex="-1"
-                                aria-labelledby="editOrderModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel"
+                                aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form id="editOrderForm" method="POST">
                                         @csrf
@@ -275,27 +259,8 @@
                             </div>
 
 
-
-
                             <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    loadRowOrder();
-                                });
-
-                                function moveRow(button, direction) {
-                                    const row = button.closest('tr');
-                                    const orderTableBody = document.getElementById('orderTableBody');
-
-                                    if (direction === -1 && row.previousElementSibling) {
-                                        orderTableBody.insertBefore(row, row.previousElementSibling);
-                                    } else if (direction === 1 && row.nextElementSibling) {
-                                        orderTableBody.insertBefore(row.nextElementSibling, row);
-                                    }
-
-                                    updateIndexes(); // Update row numbers after movement
-                                    saveRowOrder(); // Save the new order
-                                }
-
+                                // edit modals
                                 function openEditModal(pemesanan) {
                                     document.getElementById('atas_nama').value = pemesanan.atas_nama || '';
                                     document.getElementById('nama_design').value = pemesanan.nama_design || '';
@@ -309,83 +274,77 @@
                                     var modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
                                     modal.show();
                                 }
+                                // end edit modals
 
-                                function confirmDelete(id, nama_design, atas_nama) {
-                                    return confirm(`Apakah Anda yakin ingin menghapus pesanan ${nama_design} atas nama ${atas_nama}?`);
-                                }
-
-                                function updateIndexes() {
-                                    const rows = document.querySelectorAll('#orderTableBody tr');
-                                    rows.forEach((row, index) => {
-                                        row.cells[0].textContent = index + 1; // Update the first column with new index
-                                    });
-                                }
-
-                                function toggleJenisBarangLain() {
-                                    const jenisBarangSelect = document.getElementById('jenis_barang');
-                                    const jenisBarangLainDiv = document.getElementById('jenis_barang_lain_div');
-                                    jenisBarangLainDiv.style.display = jenisBarangSelect.value === 'lainnya' ? 'block' : 'none';
-                                }
-
+                                // Fungsi untuk memuat urutan baris dari localStorage
                                 function loadRowOrder() {
                                     const orderTableBody = document.getElementById('orderTableBody');
-                                    let savedOrder = localStorage.getItem('rowOrder');
-                                    let allRows = Array.from(orderTableBody.querySelectorAll('tr'));
+                                    const savedOrder = localStorage.getItem('rowOrder');
 
                                     if (savedOrder) {
-                                        let order = JSON.parse(savedOrder);
+                                        const order = JSON.parse(savedOrder);
+                                        const allRows = Array.from(orderTableBody.querySelectorAll('tr'));
 
-                                        // Append rows in saved order
+                                        // Hapus semua baris dari tabel
+                                        orderTableBody.innerHTML = '';
+
+                                        // Tambahkan baris berdasarkan urutan yang disimpan
                                         order.forEach(id => {
-                                            let row = document.querySelector(`tr[data-id="${id}"]`);
+                                            const row = allRows.find(r => r.dataset.id === id);
                                             if (row) orderTableBody.appendChild(row);
                                         });
 
-                                        // Append any new rows that weren't saved in the previous order
+                                        // Tambahkan baris yang tidak ada dalam urutan yang disimpan
                                         allRows.forEach(row => {
                                             if (!order.includes(row.dataset.id)) {
                                                 orderTableBody.appendChild(row);
                                             }
                                         });
 
-                                        updateIndexes(); // Update row numbers after loading the saved order
+                                        updateIndexes(); // Perbarui nomor urut
                                     }
                                 }
 
+                                // Fungsi untuk menyimpan urutan baris ke localStorage
                                 function saveRowOrder() {
-                                    const order = Array.from(document.querySelectorAll('#orderTableBody tr')).map(row => row.dataset.id);
+                                    const orderTableBody = document.getElementById('orderTableBody');
+                                    const rows = Array.from(orderTableBody.querySelectorAll('tr'));
+                                    const order = rows.map(row => row.dataset.id); // Ambil atribut data-id setiap baris
                                     localStorage.setItem('rowOrder', JSON.stringify(order));
                                 }
 
-                                function addNewRow(data) {
-                                    const orderTableBody = document.getElementById('orderTableBody');
+                                // Fungsi untuk memindahkan baris ke atas atau ke bawah
+                                function moveRow(button, direction) {
+                                    const row = button.closest('tr');
+                                    const sibling = direction === -1 ? row.previousElementSibling : row.nextElementSibling;
 
-                                    // Create a new row and append data
-                                    const newRow = document.createElement('tr');
-                                    newRow.setAttribute('data-id', data.id); // Set data-id for saving order
-                                    newRow.innerHTML = `
-                                        <td></td> <!-- For the index, which will be updated -->
-                                        <td>${data.atas_nama}</td>
-                                        <td>${data.nama_design}</td>
-                                        <td>${data.jenis_barang}</td>
-                                        <td>${data.QTY}</td>
-                                        <td>${data.tgl_pemesanan}</td>
-                                        <td>${data.tgl_deadline}</td>
-                                        <td>
-                                            <!-- Add any actions you want, like edit or delete buttons -->
-                                            <button onclick="openEditModal(${JSON.stringify(data)})">Edit</button>
-                                            <button onclick="confirmDelete(${data.id}, '${data.nama_design}', '${data.atas_nama}')">Delete</button>
-                                        </td>
-                                    `;
+                                    if (sibling) {
+                                        if (direction === -1) {
+                                            row.parentNode.insertBefore(row, sibling); // Pindah ke atas
+                                        } else {
+                                            row.parentNode.insertBefore(sibling, row); // Pindah ke bawah
+                                        }
 
-                                    // Append new row to the end of the table
-                                    orderTableBody.appendChild(newRow);
-
-                                    // Update index and save new order
-                                    updateIndexes();
-                                    saveRowOrder();
+                                        saveRowOrder(); // Simpan urutan setelah dipindahkan
+                                        updateIndexes(); // Perbarui nomor urut
+                                    }
                                 }
+
+                                // Fungsi untuk memperbarui kolom "No" berdasarkan urutan baris
+                                function updateIndexes() {
+                                    const rows = document.querySelectorAll('#orderTableBody tr');
+                                    rows.forEach((row, index) => {
+                                        const noCell = row.querySelector('td:first-child');
+                                        noCell.textContent = index + 1; // Perbarui nomor urut
+                                    });
+                                }
+
+                                // Panggil loadRowOrder saat halaman dimuat
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    loadRowOrder();
+                                });
                             </script>
+
                         </div>
                     </div>
                 </div>
