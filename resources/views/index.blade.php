@@ -55,7 +55,7 @@
                             <!-- Delete Modal -->
                             <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
                                 aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-dialog modal-dialog-centered modal-md">
                                     <div class="modal-content shadow border-0 rounded-4">
                                         <div class="modal-header bg-danger text-white border-0 rounded-top-4">
                                             <h5 class="modal-title" id="deleteConfirmationModalLabel">
@@ -85,9 +85,6 @@
                                 </div>
                             </div>
 
-
-
-
                             <!-- Table Structure -->
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover">
@@ -104,7 +101,6 @@
                                             <th colspan="3">Aksi</th>
                                         </tr>
                                     </thead>
-
                                     <tbody id="orderTableBody">
                                         @foreach ($pemesanans as $pemesanan)
                                             @php
@@ -166,8 +162,6 @@
                                 </table>
                             </div>
 
-
-
                             <script>
                                 let deleteFormAction;
 
@@ -194,7 +188,6 @@
                                     form.submit();
                                 });
                             </script>
-
 
                             <!-- Edit Modal -->
                             <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel"
@@ -263,9 +256,7 @@
                                     </form>
                                 </div>
                             </div>
-
-
-                            <script>
+                           <script>
                                 // edit modals
                                 function openEditModal(pemesanan) {
                                     document.getElementById('atas_nama').value = pemesanan.atas_nama || '';
@@ -278,6 +269,7 @@
                                     var modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
                                     modal.show();
                                 }
+
                                 // end edit modals
 
                                 // Fungsi untuk memuat urutan baris dari localStorage
