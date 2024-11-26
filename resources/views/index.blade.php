@@ -54,31 +54,37 @@
 
                             <!-- Delete Modal -->
                             <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
-                            aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-                           <div class="modal-dialog">
-                               <div class="modal-content shadow-lg rounded-3">
-                                   <div class="modal-header border-0">
-                                       <h5 class="modal-title text-danger" id="deleteConfirmationModalLabel">
-                                           <i class="fas fa-trash-alt me-2 fs-4"></i> Confirm Deletion
-                                       </h5>
-                                       <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                               aria-label="Close"></button>
-                                   </div>
-                                   <div class="modal-body text-center">
-                                       <p class="text-dark">Apakah anda yakin ingin menghapus desain <strong id="designName"></strong>
-                                           atas nama <strong id="customerName"></strong>?</p>
-                                   </div>
-                                   <div class="modal-footer border-0">
-                                       <button type="button" class="btn btn-outline-secondary px-4 py-2" data-bs-dismiss="modal">
-                                           Cancel
-                                       </button>
-                                       <button type="button" class="btn btn-danger px-4 py-2 shadow-lg" id="confirmDeleteButton">
-                                           <i class="fas fa-trash-alt me-2"></i> Delete
-                                       </button>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
+                                aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                    <div class="modal-content shadow border-0 rounded-4">
+                                        <div class="modal-header bg-danger text-white border-0 rounded-top-4">
+                                            <h5 class="modal-title" id="deleteConfirmationModalLabel">
+                                                <i class="fas fa-trash-alt me-2"></i> Konfirmasi Hapus
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <p class="text-dark mb-4">
+                                                Apakah Anda yakin ingin menghapus desain <strong id="designName"
+                                                    class="text-danger"></strong>
+                                                atas nama <strong id="customerName" class="text-danger"></strong>?
+                                            </p>
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button type="button" class="btn btn-outline-secondary w-50"
+                                                    data-bs-dismiss="modal">
+                                                    Batal
+                                                </button>
+                                                <button type="button" class="btn btn-danger w-50 shadow-sm"
+                                                    id="confirmDeleteButton">
+                                                    <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 
 
 
@@ -105,7 +111,7 @@
                                                 $tglPemesanan = \Carbon\Carbon::parse($pemesanan->tgl_pemesanan);
                                                 $tglDeadline = \Carbon\Carbon::parse($pemesanan->tgl_deadline);
                                                 $selisihHari = $tglPemesanan->diffInDays($tglDeadline);
-                                                $isWarning = $selisihHari <= 3 && $pemesanan->status !== 'selesai';
+                                                $isWarning = $selisihHari <= 2 && $pemesanan->status !== 'selesai';
                                             @endphp
                                             <tr data-id="{{ $pemesanan->id }}"
                                                 @if ($isWarning) class="table-danger" @endif>
@@ -268,9 +274,7 @@
                                     document.getElementById('QTY').value = pemesanan.QTY || '';
                                     document.getElementById('tgl_pemesanan').value = pemesanan.tgl_pemesanan || '';
                                     document.getElementById('tgl_deadline').value = pemesanan.tgl_deadline || '';
-
                                     document.getElementById('editOrderForm').action = '/pemesanan/' + pemesanan.id;
-
                                     var modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
                                     modal.show();
                                 }
