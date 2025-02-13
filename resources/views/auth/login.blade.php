@@ -41,12 +41,9 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
-                            <div class="d-flex justify-content-center py-4">
-                                <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                    <img src="assets/img/logo.png" alt="">
-                                    <span class="d-none d-lg-block">Samara Inti Abadi</span>
-                                </a>
+                            <div class="text-center mb-4">
+                                <img src="assets/img/logo.png" alt="Logo" width="100">
+                                <h5 class="fw-bold py-2" class="mt-2">Samara Inti Abadi</h5>
                             </div>
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -57,13 +54,13 @@
                                     <!-- Error Handling for invalid login -->
                                     <div class="col-12">
                                         @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                         @endif
                                     </div>
                                     <!-- Form -->
