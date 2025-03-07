@@ -1,20 +1,20 @@
 @extends('layout.master')
 
 @section('content')
-    <div id="ordersContainer">
-        <main id="main" class="main">
-            <div class="pagetitle">
-                <h1>Daftar Pesanan</h1>
-                <nav>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Daftar Pesanan</li>
-                    </ol>
-                </nav>
-            </div>
-            <!-- End Page Title -->
+<div id="ordersContainer">
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1>Daftar Pesanan</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Daftar Pesanan</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
 
-            <class="section dashboard">
+        <class="section dashboard">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -29,19 +29,17 @@
                                     <select name="month" class="form-select">
                                         <option value="">-- Pilih Bulan --</option>
                                         @foreach (range(1, 12) as $month)
-                                            <option value="{{ $month }}"
-                                                {{ request('month') == $month ? 'selected' : '' }}>
-                                                {{ DateTime::createFromFormat('!m', $month)->format('F') }}
-                                            </option>
+                                        <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
+                                            {{ DateTime::createFromFormat('!m', $month)->format('F') }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     <select name="year" class="form-select">
                                         <option value="">-- Pilih Tahun --</option>
                                         @foreach (range(date('Y'), 2000) as $year)
-                                            <option value="{{ $year }}"
-                                                {{ request('year') == $year ? 'selected' : '' }}>
-                                                {{ $year }}
-                                            </option>
+                                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     <button type="submit" class="btn btn-primary btn-sm">
@@ -50,9 +48,8 @@
                                 </div>
                             </form>
 
-
-
                             <!-- Delete Modal -->
+                            <!-- Delete Confirmation Modal -->
                             <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
                                 aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered modal-md">
@@ -61,8 +58,8 @@
                                             <h5 class="modal-title" id="deleteConfirmationModalLabel">
                                                 <i class="fas fa-trash-alt me-2"></i> Konfirmasi Hapus
                                             </h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                            <button type="button" class="btn-close btn-close-white"
+                                                data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-center">
                                             <p class="text-dark mb-4">
@@ -75,10 +72,13 @@
                                                     data-bs-dismiss="modal">
                                                     Batal
                                                 </button>
-                                                <button type="button" class="btn btn-danger w-50 shadow-sm"
-                                                    id="confirmDeleteButton">
-                                                    <i class="fas fa-trash-alt me-1"></i> Hapus
-                                                </button>
+                                                <form id="deleteForm" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger w-100 shadow-sm">
+                                                        <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -93,6 +93,7 @@
                                             <th>No</th>
                                             <th>Atas Nama</th>
                                             <th>Nama Design</th>
+                                            <th>kategori acara</th>
                                             <th>Jenis Barang</th>
                                             <th>QTY</th>
                                             <th>Tanggal Pemesanan</th>
@@ -103,31 +104,32 @@
                                     </thead>
                                     <tbody id="orderTableBody">
                                         @foreach ($pemesanans as $pemesanan)
-                                            @php
-                                                $tglPemesanan = \Carbon\Carbon::parse($pemesanan->tgl_pemesanan);
-                                                $tglDeadline = \Carbon\Carbon::parse($pemesanan->tgl_deadline);
-                                                $selisihHari = $tglPemesanan->diffInDays($tglDeadline);
-                                                $isWarning = $selisihHari <= 2 && $pemesanan->status !== 'selesai';
+                                        @php
+                                        $tglPemesanan = \Carbon\Carbon::parse($pemesanan->tgl_pemesanan);
+                                        $tglDeadline = \Carbon\Carbon::parse($pemesanan->tgl_deadline);
+                                        $selisihHari = $tglPemesanan->diffInDays($tglDeadline);
+                                        $isWarning = $selisihHari <= 2 && $pemesanan->status !== 'selesai';
                                             @endphp
-                                            <tr data-id="{{ $pemesanan->id }}"
-                                                @if ($isWarning) class="table-danger" @endif>
+                                            <tr data-id="{{ $pemesanan->id }}" @if ($isWarning) class="table-danger"
+                                                @endif>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $pemesanan->atas_nama }}</td>
                                                 <td>{{ $pemesanan->nama_design }}</td>
+                                                <td>{{ $pemesanan->kategori_acara }}</td>
                                                 <td>{{ $pemesanan->jenis_barang }}</td>
                                                 <td>{{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
                                                 <td>{{ $tglPemesanan->format('d-m-Y') }}</td>
                                                 <td>{{ $tglDeadline->format('d-m-Y') }}</td>
                                                 <td>
                                                     @if ($pemesanan->status === 'selesai')
-                                                        <span class="badge bg-success">DONE</span>
+                                                    <span class="badge bg-success">DONE</span>
                                                     @else
-                                                        <form action="{{ route('mark-as-completed', $pemesanan->id) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="badge bg-primary border-0">ON
-                                                                PROGRESS</button>
-                                                        </form>
+                                                    <form action="{{ route('mark-as-completed', $pemesanan->id) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="badge bg-primary border-0">ON
+                                                            PROGRESS</button>
+                                                    </form>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -157,41 +159,28 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                            @endforeach
                                     </tbody>
                                 </table>
                             </div>
 
                             <script>
-                                let deleteFormAction;
-
-                                function showDeleteConfirmation(id, designName, customerName) {
-                                    // Set the design and customer names in the modal
-                                    document.getElementById('designName').textContent = designName;
-                                    document.getElementById('customerName').textContent = customerName;
-
-                                    // Set the form action for deletion
-                                    deleteFormAction = "{{ route('pemesanan.destroy', ':id') }}".replace(':id', id);
-
-                                    // Show the modal
-                                    var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+                                function showDeleteConfirmation(id, nama_design, atas_nama) {
+                                    // Mengisi data dalam modal
+                                    document.getElementById("designName").textContent = nama_design;
+                                    document.getElementById("customerName").textContent = atas_nama;
+                                    // Update action form agar sesuai dengan ID yang dipilih
+                                    document.getElementById("deleteForm").setAttribute("action", `/pemesanan/${id}`);
+                                    // Menampilkan modal
+                                    var deleteModal = new bootstrap.Modal(document.getElementById(
+                                        "deleteConfirmationModal"));
                                     deleteModal.show();
                                 }
-
-                                document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-                                    // Create and submit a form dynamically to delete the item
-                                    const form = document.createElement('form');
-                                    form.method = 'POST';
-                                    form.action = deleteFormAction;
-                                    form.innerHTML = '@csrf @method('DELETE')';
-                                    document.body.appendChild(form);
-                                    form.submit();
-                                });
                             </script>
 
                             <!-- Edit Modal -->
-                            <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel"
-                                aria-hidden="true">
+                            <div class="modal fade" id="editOrderModal" tabindex="-1"
+                                aria-labelledby="editOrderModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form id="editOrderForm" method="POST">
                                         @csrf
@@ -213,6 +202,16 @@
                                                     <input type="text" class="form-control" id="nama_design"
                                                         name="nama_design" required>
                                                 </div>
+                                                <!-- Kategori Acara -->
+                                                <div class="mb-3">
+                                                    <label for="kategori_acara" class="form-label">Kategori
+                                                        Acara:</label>
+                                                    <select class="form-select" name="kategori_acara"
+                                                        id="kategori_acara" required>
+                                                        <option value="tempat rekreasi">Tempat Rekreasi</option>
+                                                        <option value="event">Event</option>
+                                                    </select>
+                                                </div>
                                                 <div class="mb-3">
                                                     <label for="jenis_barang" class="form-label">Jenis Barang</label>
                                                     <select class="form-select" name="jenis_barang" id="jenis_barang"
@@ -232,8 +231,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="QTY" class="form-label">QTY</label>
-                                                    <input type="number" class="form-control" id="QTY"
-                                                        name="QTY" required>
+                                                    <input type="number" class="form-control" id="QTY" name="QTY"
+                                                        required>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="tgl_pemesanan" class="form-label">Tanggal
@@ -242,10 +241,12 @@
                                                         name="tgl_pemesanan" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="tgl_deadline" class="form-label">Tanggal Deadline</label>
+                                                    <label for="tgl_deadline" class="form-label">Tanggal
+                                                        Deadline</label>
                                                     <input type="date" class="form-control" id="tgl_deadline"
                                                         name="tgl_deadline" required>
                                                 </div>
+
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -256,8 +257,8 @@
                                     </form>
                                 </div>
                             </div>
-                           <script>
-                                // edit modals
+
+                            <script>
                                 function openEditModal(pemesanan) {
                                     document.getElementById('atas_nama').value = pemesanan.atas_nama || '';
                                     document.getElementById('nama_design').value = pemesanan.nama_design || '';
@@ -265,85 +266,16 @@
                                     document.getElementById('QTY').value = pemesanan.QTY || '';
                                     document.getElementById('tgl_pemesanan').value = pemesanan.tgl_pemesanan || '';
                                     document.getElementById('tgl_deadline').value = pemesanan.tgl_deadline || '';
+                                    document.getElementById('kategori_acara').value = pemesanan.kategori_acara ||
+                                        'tempat rekreasi'; // Default ke tempat rekreasi
                                     document.getElementById('editOrderForm').action = '/pemesanan/' + pemesanan.id;
                                     var modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
                                     modal.show();
                                 }
-
-                                // end edit modals
-
-                                // Fungsi untuk memuat urutan baris dari localStorage
-                                function loadRowOrder() {
-                                    const orderTableBody = document.getElementById('orderTableBody');
-                                    const savedOrder = localStorage.getItem('rowOrder');
-
-                                    if (savedOrder) {
-                                        const order = JSON.parse(savedOrder);
-                                        const allRows = Array.from(orderTableBody.querySelectorAll('tr'));
-
-                                        // Hapus semua baris dari tabel
-                                        orderTableBody.innerHTML = '';
-
-                                        // Tambahkan baris berdasarkan urutan yang disimpan
-                                        order.forEach(id => {
-                                            const row = allRows.find(r => r.dataset.id === id);
-                                            if (row) orderTableBody.appendChild(row);
-                                        });
-
-                                        // Tambahkan baris yang tidak ada dalam urutan yang disimpan
-                                        allRows.forEach(row => {
-                                            if (!order.includes(row.dataset.id)) {
-                                                orderTableBody.appendChild(row);
-                                            }
-                                        });
-
-                                        updateIndexes(); // Perbarui nomor urut
-                                    }
-                                }
-
-                                // Fungsi untuk menyimpan urutan baris ke localStorage
-                                function saveRowOrder() {
-                                    const orderTableBody = document.getElementById('orderTableBody');
-                                    const rows = Array.from(orderTableBody.querySelectorAll('tr'));
-                                    const order = rows.map(row => row.dataset.id); // Ambil atribut data-id setiap baris
-                                    localStorage.setItem('rowOrder', JSON.stringify(order));
-                                }
-
-                                // Fungsi untuk memindahkan baris ke atas atau ke bawah
-                                function moveRow(button, direction) {
-                                    const row = button.closest('tr');
-                                    const sibling = direction === -1 ? row.previousElementSibling : row.nextElementSibling;
-
-                                    if (sibling) {
-                                        if (direction === -1) {
-                                            row.parentNode.insertBefore(row, sibling); // Pindah ke atas
-                                        } else {
-                                            row.parentNode.insertBefore(sibling, row); // Pindah ke bawah
-                                        }
-
-                                        saveRowOrder(); // Simpan urutan setelah dipindahkan
-                                        updateIndexes(); // Perbarui nomor urut
-                                    }
-                                }
-
-                                // Fungsi untuk memperbarui kolom "No" berdasarkan urutan baris
-                                function updateIndexes() {
-                                    const rows = document.querySelectorAll('#orderTableBody tr');
-                                    rows.forEach((row, index) => {
-                                        const noCell = row.querySelector('td:first-child');
-                                        noCell.textContent = index + 1; // Perbarui nomor urut
-                                    });
-                                }
-
-                                // Panggil loadRowOrder saat halaman dimuat
-                                document.addEventListener('DOMContentLoaded', () => {
-                                    loadRowOrder();
-                                });
                             </script>
-
                         </div>
                     </div>
                 </div>
             </div>
             </class>
-        @endsection
+            @endsection

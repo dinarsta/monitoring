@@ -54,6 +54,7 @@ class PemesananController extends Controller
             'tgl_pemesanan' => 'required|date',
             'tgl_deadline' => 'required|date',
             'jenis_barang_lain' => 'nullable|string|max:255', // Optional for 'lainnya'
+            'kategori_acara' => 'required|in:tempat rekreasi,event', // Validate kategori_acara
         ]);
 
         // Create a new Pemesanan instance and save it
@@ -63,6 +64,7 @@ class PemesananController extends Controller
         $pemesanan->QTY = $request->QTY;
         $pemesanan->tgl_pemesanan = $request->tgl_pemesanan;
         $pemesanan->tgl_deadline = $request->tgl_deadline;
+        $pemesanan->kategori_acara = $request->kategori_acara;
 
         // Save the `jenis_barang` or the custom `jenis_barang_lain`
         $pemesanan->jenis_barang = $request->jenis_barang === 'lainnya' ? $request->jenis_barang_lain : $request->jenis_barang;
@@ -78,7 +80,6 @@ class PemesananController extends Controller
         return view('edit', compact('pemesanan'));
     }
 
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -88,6 +89,7 @@ class PemesananController extends Controller
             'QTY' => 'required|integer',
             'tgl_pemesanan' => 'required|date',
             'tgl_deadline' => 'required|date',
+            'kategori_acara' => 'required|in:tempat rekreasi,event', // Validate kategori_acara
         ]);
 
         $pemesanan = Pemesanan::findOrFail($id);
@@ -97,6 +99,7 @@ class PemesananController extends Controller
         $pemesanan->QTY = $request->input('QTY');
         $pemesanan->tgl_pemesanan = $request->input('tgl_pemesanan');
         $pemesanan->tgl_deadline = $request->input('tgl_deadline');
+        $pemesanan->kategori_acara = $request->input('kategori_acara');
 
         // Save the updated model
         $pemesanan->save();
@@ -117,6 +120,7 @@ class PemesananController extends Controller
             'tgl_pemesanan' => $pemesanan->tgl_pemesanan,
             'tgl_deadline' => $pemesanan->tgl_deadline,
             'jenis_barang' => $pemesanan->jenis_barang,
+            'kategori_acara' => $pemesanan->kategori_acara,
             'status' => $pemesanan->status,
             'deleted_at' => now(),
         ]);

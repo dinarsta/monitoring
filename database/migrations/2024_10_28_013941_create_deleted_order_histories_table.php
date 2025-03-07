@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('pemesanan_id');
             $table->string('atas_nama');
             $table->string('nama_design');
+            $table->enum('kategori_acara', ['tempat rekreasi', 'event']);
             $table->integer('QTY');
             $table->date('tgl_pemesanan');
             $table->date('tgl_deadline');

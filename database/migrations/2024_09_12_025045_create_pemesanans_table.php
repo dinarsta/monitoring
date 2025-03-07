@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('atas_nama');
             $table->string('nama_design');
+            $table->enum('kategori_acara', ['tempat rekreasi', 'event']);
             $table->integer('QTY');
-            $table->string('jenis_barang')->nullable(); // Allow jenis_barang to be null
+            $table->string('jenis_barang')->nullable();
             $table->date('tgl_pemesanan');
             $table->date('tgl_deadline');
             $table->enum('status', ['on progress', 'done', 'selesai'])->default('on progress');
             $table->timestamps();
-            });
-
+        });
     }
 
     /**

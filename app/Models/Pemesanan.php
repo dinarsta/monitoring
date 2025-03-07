@@ -11,6 +11,7 @@ class Pemesanan extends Model
     protected $fillable = [
         'atas_nama',
         'nama_design',
+        'kategori_acara',
         'QTY',
         'tgl_pemesanan',
        'tgl_deadline',

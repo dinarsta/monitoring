@@ -39,8 +39,7 @@
 
                                 <div class="mb-3">
                                     <label for="jenis_barang" class="form-label">Jenis Barang:</label>
-                                    <select class="form-select" name="jenis_barang" id="jenis_barang"
-                                        onchange="toggleJenisBarangLain()">
+                                    <select class="form-select" name="jenis_barang" id="jenis_barang" onchange="toggleJenisBarangLain()">
                                         <option value="gelang">Gelang</option>
                                         <option value="gelang lanyard">Gelang Lanyard</option>
                                         <option value="gelang kertas">Gelang Kertas</option>
@@ -52,8 +51,7 @@
                                 <!-- Conditional Input for Other Types of Goods -->
                                 <div class="mb-3" id="jenis_barang_lain_container" style="display: none;">
                                     <label for="jenis_barang_lain" class="form-label">Jenis Barang Lainnya:</label>
-                                    <input type="text" class="form-control" name="jenis_barang_lain"
-                                        id="jenis_barang_lain" maxlength="255">
+                                    <input type="text" class="form-control" name="jenis_barang_lain" id="jenis_barang_lain" maxlength="255">
                                 </div>
 
                                 <script>
@@ -65,22 +63,27 @@
                                             jenisBarangLainContainer.style.display = 'block';
                                         } else {
                                             jenisBarangLainContainer.style.display = 'none';
-                                            // Reset the value of jenis_barang_lain if it's hidden
                                             document.getElementById('jenis_barang_lain').value = '';
                                         }
                                     }
                                 </script>
 
                                 <div class="mb-3">
+                                    <label for="kategori_acara" class="form-label">Kategori Acara:</label>
+                                    <select class="form-select" name="kategori_acara" id="kategori_acara" required>
+                                        <option value="tempat rekreasi">Tempat Rekreasi</option>
+                                        <option value="event">Event</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="tgl_pemesanan" class="form-label">Tanggal Pemesanan:</label>
-                                    <input type="date" class="form-control" name="tgl_pemesanan" id="tgl_pemesanan"
-                                        required>
+                                    <input type="date" class="form-control" name="tgl_pemesanan" id="tgl_pemesanan" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="tgl_deadline" class="form-label">Tanggal Deadline:</label>
-                                    <input type="date" class="form-control" name="tgl_deadline" id="tgl_deadline"
-                                        required>
+                                    <input type="date" class="form-control" name="tgl_deadline" id="tgl_deadline" required>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Create Order</button>

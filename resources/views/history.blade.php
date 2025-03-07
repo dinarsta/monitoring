@@ -57,6 +57,7 @@
                                         <th>NO</th>
                                         <th>Atas Nama</th>
                                         <th>Nama Design</th>
+                                        <th>Kategori Acara</th> <!-- Kolom Kategori Acara Ditambahkan -->
                                         <th>QTY</th>
                                         <th>Tanggal Pemesanan</th>
                                         <th>Tanggal Deadline</th>
@@ -69,6 +70,7 @@
                                         <td>{{ $order->id }}</td>
                                         <td>{{ $order->atas_nama }}</td>
                                         <td>{{ $order->nama_design }}</td>
+                                        <td>{{ $order->kategori_acara ?? 'Tidak Ada Kategori' }}</td> <!-- Menampilkan Kategori Acara -->
                                         <td>{{ number_format($order->QTY, 0, ',', '.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($order->tgl_pemesanan)->format('d-m-Y') }}
                                         </td>
