@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('atas_nama');
             $table->string('nama_design');
+            $table->string('telp');
             $table->enum('kategori_acara', ['tempat rekreasi', 'event']);
             $table->integer('QTY');
             $table->string('jenis_barang')->nullable();

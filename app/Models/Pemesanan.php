@@ -16,5 +16,6 @@ class Pemesanan extends Model
         'tgl_pemesanan',
        'tgl_deadline',
         'status',
+        'telp',
     ];
 }

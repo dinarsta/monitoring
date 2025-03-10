@@ -93,6 +93,7 @@
                                             <th>No</th>
                                             <th>Atas Nama</th>
                                             <th>Nama Design</th>
+                                            <th>No.Telp</th>
                                             <th>kategori acara</th>
                                             <th>Jenis Barang</th>
                                             <th>QTY</th>
@@ -115,6 +116,9 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $pemesanan->atas_nama }}</td>
                                                 <td>{{ $pemesanan->nama_design }}</td>
+                                                <td>{{ substr($pemesanan->telp, 0, 3) . '****' . substr($pemesanan->telp, -3) }}
+                                                </td>
+
                                                 <td>{{ $pemesanan->kategori_acara }}</td>
                                                 <td>{{ $pemesanan->jenis_barang }}</td>
                                                 <td>{{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
@@ -202,6 +206,11 @@
                                                     <input type="text" class="form-control" id="nama_design"
                                                         name="nama_design" required>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label for="nama_design" class="form-label">No.Telp</label>
+                                                    <input type="number" class="form-control" id="telp" name="telp"
+                                                        required>
+                                                </div>
                                                 <!-- Kategori Acara -->
                                                 <div class="mb-3">
                                                     <label for="kategori_acara" class="form-label">Kategori
@@ -262,6 +271,7 @@
                                 function openEditModal(pemesanan) {
                                     document.getElementById('atas_nama').value = pemesanan.atas_nama || '';
                                     document.getElementById('nama_design').value = pemesanan.nama_design || '';
+                                    document.getElementById('telp').value = pemesanan.telp || '';
                                     document.getElementById('jenis_barang').value = pemesanan.jenis_barang || '';
                                     document.getElementById('QTY').value = pemesanan.QTY || '';
                                     document.getElementById('tgl_pemesanan').value = pemesanan.tgl_pemesanan || '';

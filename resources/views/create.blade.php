@@ -33,6 +33,11 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label for="telp" class="form-label">No.Telp:</label>
+                                    <input type="number" class="form-control" name="telp" id="telp" required>
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="QTY" class="form-label">QTY:</label>
                                     <input type="number" class="form-control" name="QTY" id="QTY" required>
                                 </div>

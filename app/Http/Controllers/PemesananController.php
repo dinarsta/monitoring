@@ -49,6 +49,7 @@ class PemesananController extends Controller
         $request->validate([
             'atas_nama' => 'required|string|max:255',
             'nama_design' => 'required|string|max:255',
+            'telp' => 'required|string',
             'QTY' => 'required|integer',
             'jenis_barang' => 'required|string',
             'tgl_pemesanan' => 'required|date',
@@ -61,6 +62,7 @@ class PemesananController extends Controller
         $pemesanan = new Pemesanan();
         $pemesanan->atas_nama = $request->atas_nama;
         $pemesanan->nama_design = $request->nama_design;
+        $pemesanan->telp = $request->telp;
         $pemesanan->QTY = $request->QTY;
         $pemesanan->tgl_pemesanan = $request->tgl_pemesanan;
         $pemesanan->tgl_deadline = $request->tgl_deadline;
@@ -85,6 +87,7 @@ class PemesananController extends Controller
         $request->validate([
             'atas_nama' => 'required|string|max:255',
             'nama_design' => 'required|string|max:255',
+            'telp' => 'required|string|max:255',
             'jenis_barang' => 'required|string',
             'QTY' => 'required|integer',
             'tgl_pemesanan' => 'required|date',
@@ -95,6 +98,7 @@ class PemesananController extends Controller
         $pemesanan = Pemesanan::findOrFail($id);
         $pemesanan->atas_nama = $request->input('atas_nama');
         $pemesanan->nama_design = $request->input('nama_design');
+        $pemesanan->telp = $request->input('telp');
         $pemesanan->jenis_barang = $request->input('jenis_barang');
         $pemesanan->QTY = $request->input('QTY');
         $pemesanan->tgl_pemesanan = $request->input('tgl_pemesanan');
@@ -116,6 +120,7 @@ class PemesananController extends Controller
             'pemesanan_id' => $pemesanan->id,
             'atas_nama' => $pemesanan->atas_nama,
             'nama_design' => $pemesanan->nama_design,
+            'telp' => $pemesanan->telp,
             'QTY' => $pemesanan->QTY,
             'tgl_pemesanan' => $pemesanan->tgl_pemesanan,
             'tgl_deadline' => $pemesanan->tgl_deadline,
