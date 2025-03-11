@@ -9,14 +9,16 @@ class DeletedOrderHistory extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pemesanan_id',  // ID of the deleted order
-        'atas_nama',     // Customer name
-        'nama_design',   // Design name
-        'QTY',           // Quantity ordered
-        'jenis_barang',  // Type of item
-        'telp',  // Type of item
-        'tgl_pemesanan', // Order date
-        'tgl_deadline',  // Deadline date
-        'status'         // Status of the deleted order
+    'pemesanan_id',
+    'atas_nama',
+    'nama_design',
+    'telp',
+    'QTY',
+    'tgl_pemesanan',
+    'tgl_deadline',
+    'jenis_barang',
+    'kategori_acara', // Pastikan ini ada
+    'status',
+    'deleted_at',
     ];
 }

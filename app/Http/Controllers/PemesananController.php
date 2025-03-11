@@ -115,7 +115,12 @@ class PemesananController extends Controller
     {
         $pemesanan = Pemesanan::findOrFail($id);
 
-        // Pindahkan data ke tabel `deleted_orders_history`
+        // Debugging: Cek apakah kategori_acara memiliki nilai yang benar
+        if (!$pemesanan->kategori_acara) {
+            return redirect()->back()->with('error', 'Kategori acara tidak ditemukan.');
+        }
+
+        // Simpan ke history
         \App\Models\DeletedOrderHistory::create([
             'pemesanan_id' => $pemesanan->id,
             'atas_nama' => $pemesanan->atas_nama,
@@ -125,12 +130,12 @@ class PemesananController extends Controller
             'tgl_pemesanan' => $pemesanan->tgl_pemesanan,
             'tgl_deadline' => $pemesanan->tgl_deadline,
             'jenis_barang' => $pemesanan->jenis_barang,
-            'kategori_acara' => $pemesanan->kategori_acara,
+            'kategori_acara' => $pemesanan->kategori_acara, // Pastikan ini tersimpan
             'status' => $pemesanan->status,
             'deleted_at' => now(),
         ]);
 
-        // Hapus data dari tabel `pemesanans`
+        // Hapus dari tabel pemesanans
         $pemesanan->delete();
 
         return redirect()->route('index')->with('success', 'Order deleted successfully and added to history.');

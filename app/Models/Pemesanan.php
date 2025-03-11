@@ -9,13 +9,16 @@ class Pemesanan extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'pemesanan_id',
         'atas_nama',
         'nama_design',
-        'kategori_acara',
+        'telp',
         'QTY',
         'tgl_pemesanan',
-       'tgl_deadline',
+        'tgl_deadline',
+        'jenis_barang',
+        'kategori_acara', // Pastikan ini ada
         'status',
-        'telp',
+        'deleted_at',
     ];
 }
