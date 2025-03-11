@@ -12,31 +12,11 @@ use Illuminate\Validation\ValidationException;
 class PemesananController extends Controller
 {
 
-    public function index(Request $request)
-{
-    $query = Pemesanan::query();
-
-    // Pencarian berdasarkan nama
-    if ($request->has('search') && $request->search != '') {
-        $query->where('atas_nama', 'like', '%' . $request->search . '%');
+    public function index()
+    {
+        $pemesanans = Pemesanan::orderBy('order_column', 'asc')->get();
+        return view('index', compact('pemesanans'));
     }
-
-    // Filter berdasarkan bulan
-    if ($request->has('month') && $request->month != '') {
-        $query->whereMonth('tgl_pemesanan', $request->month);
-    }
-
-    // Filter berdasarkan tahun
-    if ($request->has('year') && $request->year != '') {
-        $query->whereYear('tgl_pemesanan', $request->year);
-    }
-
-    // Mendapatkan semua data pemesanan
-    $pemesanans = $query->get();
-
-    // Mengirimkan data ke view
-    return view('index', compact('pemesanans'));
-}
 
     public function create()
     {
@@ -81,6 +61,19 @@ class PemesananController extends Controller
         $pemesanan = Pemesanan::findOrFail($id);
         return view('edit', compact('pemesanan'));
     }
+
+    public function updateOrder(Request $request)
+    {
+        $orders = $request->orders;
+
+        foreach ($orders as $order) {
+            Pemesanan::where('id', $order['id'])->update(['order_column' => $order['order_column']]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+
 
     public function update(Request $request, $id)
     {

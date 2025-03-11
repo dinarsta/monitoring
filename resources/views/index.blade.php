@@ -86,6 +86,8 @@
                             </div>
 
                             <!-- Table Structure -->
+
+                            <!-- Table Structure -->
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead>
@@ -94,13 +96,13 @@
                                             <th>Atas Nama</th>
                                             <th>Nama Design</th>
                                             <th>No.Telp</th>
-                                            <th>kategori acara</th>
+                                            <th>Kategori Acara</th>
                                             <th>Jenis Barang</th>
                                             <th>QTY</th>
                                             <th>Tanggal Pemesanan</th>
                                             <th>Tanggal Deadline</th>
                                             <th>Status</th>
-                                            <th colspan="3">Aksi</th>
+                                            <th colspan="4">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="orderTableBody">
@@ -111,14 +113,14 @@
                                         $selisihHari = $tglPemesanan->diffInDays($tglDeadline);
                                         $isWarning = $selisihHari <= 2 && $pemesanan->status !== 'selesai';
                                             @endphp
-                                            <tr data-id="{{ $pemesanan->id }}" @if ($isWarning) class="table-danger"
-                                                @endif>
+                                            <tr data-id="{{ $pemesanan->id }}"
+                                                data-order="{{ $pemesanan->order_column }}" @if ($isWarning)
+                                                class="table-danger" @endif>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $pemesanan->atas_nama }}</td>
                                                 <td>{{ $pemesanan->nama_design }}</td>
                                                 <td>{{ substr($pemesanan->telp, 0, 3) . '****' . substr($pemesanan->telp, -3) }}
                                                 </td>
-
                                                 <td>{{ $pemesanan->kategori_acara }}</td>
                                                 <td>{{ $pemesanan->jenis_barang }}</td>
                                                 <td>{{ number_format($pemesanan->QTY, 0, ',', '.') }}</td>
@@ -282,7 +284,45 @@
                                     var modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
                                     modal.show();
                                 }
+                                //
+                                function moveRow(button, direction) {
+                                    let row = button.closest("tr");
+                                    let tbody = document.getElementById("orderTableBody");
+                                    if (direction === -1 && row.previousElementSibling) {
+                                        tbody.insertBefore(row, row.previousElementSibling);
+                                    } else if (direction === 1 && row.nextElementSibling) {
+                                        tbody.insertBefore(row.nextElementSibling, row);
+                                    }
+                                    updateOrderInDatabase();
+                                }
+
+                                function updateOrderInDatabase() {
+                                    let rows = document.querySelectorAll("#orderTableBody tr");
+                                    let orders = [];
+                                    rows.forEach((row, index) => {
+                                        orders.push({
+                                            id: row.getAttribute("data-id"),
+                                            order_column: index + 1
+                                        });
+                                    });
+                                    fetch("{{ route('update.order') }}", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                            },
+                                            body: JSON.stringify({
+                                                orders
+                                            })
+                                        }).then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                console.log("Urutan berhasil disimpan.");
+                                            }
+                                        }).catch(error => console.error("Terjadi kesalahan:", error));
+                                }
                             </script>
+
                         </div>
                     </div>
                 </div>

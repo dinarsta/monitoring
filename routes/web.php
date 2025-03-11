@@ -47,6 +47,8 @@ Route::get('/history', [PemesananController::class, 'history'])->name('history')
 
 // live server
 Route::get('/orders/latest', [PemesananController::class, 'getLatestOrders'])->name('orders.latest');
+Route::post('/update-order', [PemesananController::class, 'updateOrder'])->name('update.order');
+
 
     // Logout route
     Route::post('/logout', [PemesananController::class, 'logout'])->name('logout');

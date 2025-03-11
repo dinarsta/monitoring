@@ -19,6 +19,7 @@ class Pemesanan extends Model
         'jenis_barang',
         'kategori_acara', // Pastikan ini ada
         'status',
+       'order_column',
         'deleted_at',
     ];
 }
