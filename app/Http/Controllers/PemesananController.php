@@ -12,11 +12,33 @@ use Illuminate\Validation\ValidationException;
 class PemesananController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $pemesanans = Pemesanan::orderBy('order_column', 'asc')->get();
+        $query = Pemesanan::orderBy('order_column', 'asc');
+
+        // Filter berdasarkan pencarian nama desain atau atas nama
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_design', 'like', '%' . $request->search . '%')
+                  ->orWhere('atas_nama', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter berdasarkan bulan
+        if ($request->has('month') && $request->month != '') {
+            $query->whereMonth('tgl_pemesanan', $request->month);
+        }
+
+        // Filter berdasarkan tahun
+        if ($request->has('year') && $request->year != '') {
+            $query->whereYear('tgl_pemesanan', $request->year);
+        }
+
+        $pemesanans = $query->get();
+
         return view('index', compact('pemesanans'));
     }
+
 
     public function create()
     {
