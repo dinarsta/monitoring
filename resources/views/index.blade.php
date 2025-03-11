@@ -286,41 +286,56 @@
                                 }
                                 //
                                 function moveRow(button, direction) {
-                                    let row = button.closest("tr");
-                                    let tbody = document.getElementById("orderTableBody");
-                                    if (direction === -1 && row.previousElementSibling) {
-                                        tbody.insertBefore(row, row.previousElementSibling);
-                                    } else if (direction === 1 && row.nextElementSibling) {
-                                        tbody.insertBefore(row.nextElementSibling, row);
-                                    }
-                                    updateOrderInDatabase();
-                                }
+    let row = button.closest("tr");
+    let tbody = document.getElementById("orderTableBody");
 
-                                function updateOrderInDatabase() {
-                                    let rows = document.querySelectorAll("#orderTableBody tr");
-                                    let orders = [];
-                                    rows.forEach((row, index) => {
-                                        orders.push({
-                                            id: row.getAttribute("data-id"),
-                                            order_column: index + 1
-                                        });
-                                    });
-                                    fetch("{{ route('update.order') }}", {
-                                            method: "POST",
-                                            headers: {
-                                                "Content-Type": "application/json",
-                                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                            },
-                                            body: JSON.stringify({
-                                                orders
-                                            })
-                                        }).then(response => response.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                console.log("Urutan berhasil disimpan.");
-                                            }
-                                        }).catch(error => console.error("Terjadi kesalahan:", error));
-                                }
+    if (direction === -1 && row.previousElementSibling) {
+        tbody.insertBefore(row, row.previousElementSibling);
+    } else if (direction === 1 && row.nextElementSibling) {
+        tbody.insertBefore(row.nextElementSibling, row);
+    }
+
+    updateRowNumbers();
+    updateOrderInDatabase();
+}
+
+function updateRowNumbers() {
+    let rows = document.querySelectorAll("#orderTableBody tr");
+    rows.forEach((row, index) => {
+        row.cells[0].textContent = index + 1; // Perbarui nomor urut di kolom pertama
+    });
+}
+
+function updateOrderInDatabase() {
+    let rows = document.querySelectorAll("#orderTableBody tr");
+    let orders = [];
+    rows.forEach((row, index) => {
+        orders.push({
+            id: row.getAttribute("data-id"),
+            order_column: index + 1
+        });
+    });
+
+    fetch("{{ route('update.order') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+            orders
+        })
+    }).then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log("Urutan berhasil disimpan.");
+        }
+    }).catch(error => console.error("Terjadi kesalahan:", error));
+}
+
+// Panggil fungsi ini saat halaman dimuat untuk memastikan nomor urut sesuai
+document.addEventListener("DOMContentLoaded", updateRowNumbers);
+
                             </script>
 
                         </div>
