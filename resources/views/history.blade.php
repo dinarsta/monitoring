@@ -71,7 +71,7 @@
                                         <td>{{ $order->id }}</td>
                                         <td>{{ $order->atas_nama }}</td>
                                         <td>{{ $order->nama_design }}</td>
-                                        <td>{{ substr($order->telp, 0, 3) . '****' . substr($order->telp, -3) }}</td>
+                                        <td>{{ $order->telp}}</td>
                                         <td>{{ $order->kategori_acara ?? 'Tidak Ada Kategori' }}</td> <!-- Menampilkan Kategori Acara -->
                                         <td>{{ number_format($order->QTY, 0, ',', '.') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($order->tgl_pemesanan)->format('d-m-Y') }}

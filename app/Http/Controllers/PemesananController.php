@@ -47,35 +47,22 @@ class PemesananController extends Controller
 
     public function store(Request $request)
     {
-        // Validate incoming request data
-        $request->validate([
-            'atas_nama' => 'required|string|max:255',
-            'nama_design' => 'required|string|max:255',
-            'telp' => 'required|string',
-            'QTY' => 'required|integer',
-            'jenis_barang' => 'required|string',
-            'tgl_pemesanan' => 'required|date',
-            'tgl_deadline' => 'required|date',
-            'jenis_barang_lain' => 'nullable|string|max:255', // Optional for 'lainnya'
-            'kategori_acara' => 'required|in:tempat rekreasi,event', // Validate kategori_acara
+        $maxOrder = Pemesanan::max('order_column'); // Ambil nilai terbesar dari order_column
+        $newOrder = $maxOrder ? $maxOrder + 1 : 1; // Jika tidak ada data, mulai dari 1
+
+        Pemesanan::create([
+            'atas_nama' => $request->atas_nama,
+            'nama_design' => $request->nama_design,
+            'telp' => $request->telp,
+            'jenis_barang' => $request->jenis_barang,
+            'QTY' => $request->QTY,
+            'tgl_pemesanan' => $request->tgl_pemesanan,
+            'tgl_deadline' => $request->tgl_deadline,
+            'kategori_acara' => $request->kategori_acara,
+            'order_column' => $newOrder, // Pastikan data baru selalu di urutan paling bawah
         ]);
 
-        // Create a new Pemesanan instance and save it
-        $pemesanan = new Pemesanan();
-        $pemesanan->atas_nama = $request->atas_nama;
-        $pemesanan->nama_design = $request->nama_design;
-        $pemesanan->telp = $request->telp;
-        $pemesanan->QTY = $request->QTY;
-        $pemesanan->tgl_pemesanan = $request->tgl_pemesanan;
-        $pemesanan->tgl_deadline = $request->tgl_deadline;
-        $pemesanan->kategori_acara = $request->kategori_acara;
-
-        // Save the `jenis_barang` or the custom `jenis_barang_lain`
-        $pemesanan->jenis_barang = $request->jenis_barang === 'lainnya' ? $request->jenis_barang_lain : $request->jenis_barang;
-
-        $pemesanan->save();
-
-        return redirect()->route('index')->with('success', 'Order created successfully!');
+        return redirect()->route('index')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function edit($id)
