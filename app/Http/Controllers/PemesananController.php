@@ -115,14 +115,10 @@ class PemesananController extends Controller
 
     public function destroy($id)
     {
-        $pemesanan = Pemesanan::findOrFail($id);
+        // Ambil data termasuk yang mungkin sudah soft deleted
+        $pemesanan = Pemesanan::withTrashed()->findOrFail($id);
 
-        // Debugging: Cek apakah kategori_acara memiliki nilai yang benar
-        if (!$pemesanan->kategori_acara) {
-            return redirect()->back()->with('error', 'Kategori acara tidak ditemukan.');
-        }
-
-        // Simpan ke history
+        // Simpan ke tabel DeletedOrderHistory sebelum dihapus permanen
         \App\Models\DeletedOrderHistory::create([
             'pemesanan_id' => $pemesanan->id,
             'atas_nama' => $pemesanan->atas_nama,
@@ -132,16 +128,17 @@ class PemesananController extends Controller
             'tgl_pemesanan' => $pemesanan->tgl_pemesanan,
             'tgl_deadline' => $pemesanan->tgl_deadline,
             'jenis_barang' => $pemesanan->jenis_barang,
-            'kategori_acara' => $pemesanan->kategori_acara, // Pastikan ini tersimpan
+            'kategori_acara' => $pemesanan->kategori_acara ?? 'event', // Pastikan tetap bisa tersimpan
             'status' => $pemesanan->status,
             'deleted_at' => now(),
         ]);
 
-        // Hapus dari tabel pemesanans
-        $pemesanan->delete();
+        // Hapus permanen dari database
+        $pemesanan->forceDelete();
 
         return redirect()->route('index')->with('success', 'Order deleted successfully and added to history.');
     }
+
 
     public function markAsCompleted($id)
     {
